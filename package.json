@@ -1,0 +1,10 @@
+{
+    "name": "InvertedIndexNode",
+    "version": "1.0.0",
+    "keywords": ["util", "functional", "server", "client", "browser","objects"],
+    "author": "JOLAADE",
+    "email":"jolaade.adewale@andela.com",
+    "contributors": [],
+    "dependencies": {"express":"latest"}
+}
+
