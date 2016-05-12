@@ -61,7 +61,9 @@ function InvertedIndex() {
    * @param  {Array} A list of all unique words array to be populated.
    * @param  {Object} The words and documents location object to be populated.
    * @param  {Array} .
+   * @param  {Object}The JSON file to be set
    * @param  {Object} The original length of the JSON file.
+   * param   {Object} The Index created flag to be set
    * creates the HttpRequest .
    * adds a Listener for the requests callback
    * sets request paramters and header
@@ -89,7 +91,9 @@ function requestData(source, emptyDatasource,
    * @param  {Array} A list of unique words array to set on request's response.
    * @param  {Object} The words and documents location object to set on request's response.
    * @param  {Array} .
+   * *@param  {Object} The JSON file to be set
    * @param  {Object} The original length of the JSON file to set on request's response.
+   * @param   {Object} The Index created flag to be set on response
    * sets on readystatechange listener
    * sets a calback function on request's response
    * sets asynchronous to false
@@ -112,34 +116,73 @@ function addSynclistener(syncRequest, emptyDatasource, indexArray, indexObject,
    * sets on readystatechange listener
    * sets a calback function on request's response
    * sets asynchronous to false
+   * sets request header and sends request
    * @return {void}
    */
 function prepareSyncRequest(source, syncRequest) {
+
   syncRequest.open('GET', source.concat('/books.json'), false);
   syncRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
   syncRequest.send();
 }
 
+/**
+   * @param  {Object} request object
+   * @param  {String} The datasource flag to set on request's response.
+   * @param  {Array} A list of unique words array to set on request's response.
+   * @param  {Object} The words and documents location object to set on request's response.
+   * @param  {Array} .
+   * @param  {Object}The JSON file to set
+   *  @param  {Object} The original length of the JSON file to set on request's response.
+   * gets response and initialises it to jsondata
+   * saves json file (books.json)
+   * saves json file length
+   * manipulates json file
+   * @return {void}
+   */
 function parseData(syncRequest, emptyDatasource, indexArray, indexObject,
   uniqueIndex, document, documentlength, indexCreated) {
   if (syncRequest.readyState === 4 && syncRequest.status === 200) {
     var jsonData = JSON.parse(syncRequest.responseText);
     saveJsonFile(document, jsonData);
     saveDocumentLength(documentlength, jsonData);
-    getSyncRequest(jsonData, emptyDatasource, indexArray, indexCreated, indexObject);
+    //gets the books.json file
+    getSyncResponse(jsonData, emptyDatasource, indexArray, indexCreated, indexObject);
   }
 }
 
-function getSyncRequest(jsonData, emptyDatasource, indexArray, indexCreated,
+/**
+   * @param  {Object} books.json object
+   * @param  {Object} datasource flag
+   * @param  {Array} list of all unique words
+   * @param  {Object} index created flag
+   * @param  {Object} The words and documents location
+   * sets empty datasource flag to false
+   * elimanates duplicate words and replaces non words
+   * sets index created to true
+   * sets words and documents location
+   * @return {void}
+   */
+function getSyncResponse(jsonData, emptyDatasource, indexArray, indexCreated,
   indexObject) {
   if (jsonData.length >= 0 && jsonData !== []) {
     emptyDatasource.isEmpty = false;
     processData(jsonData, indexArray);
     isIndexcreated(indexCreated, indexArray);
+    //sets my words and documents located
     indexObject.strings = createIndex(indexArray);
   }
 }
 
+/**
+   * @param  {Object} books.json object
+   * @param  {Array} unique elements
+   * populates the unique elements from jsonData and sorts them
+   * elimanates duplicate words and replaces non words
+   * re-initialises unique elements to sorted and unique words
+   *
+   * @return {void}
+   */
 function processData(jsonData, indexArray) {
   for (var value in jsonData) {
     indexArray
@@ -152,19 +195,40 @@ function processData(jsonData, indexArray) {
   }
 }
 
+/**
+   * @param  {Object} JSON file
+   * @param  {Object} books.json object
+   * stores original json file
+   *
+   * @return {void}
+   */
 function saveJsonFile(document, jsonData) {
   document.jsonfile = jsonData;
 }
-
+/**
+   * @param  {Array} books.json file length
+   * @param  {Object} books.json object
+   * saves the length of the book.json file recieved
+   *
+   * @return {void}
+   */
 function saveDocumentLength(documentlength, jsonData) {
   documentlength.length = jsonData.length;
 }
 
+/**
+   * @param  {Object} index created flag
+   * @param  {Object} search object
+   * sets is created to true if object length > 0
+   *
+   * @return {void}
+   */
 function isIndexcreated(indexCreated, indexObject) {
   if (indexObject.length > 0) {
     indexCreated.isCreated = true;
   }
 }
+
 
 function lowerCase(text) {
   return text.toLowerCase();
@@ -205,6 +269,7 @@ function createIndex(value) {
   }
   return indexedObject;
 }
+
 
 function getIndexPosition(key, indexobject) {
   return indexobject[key.toLowerCase()];
