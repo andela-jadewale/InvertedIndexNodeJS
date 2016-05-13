@@ -11,6 +11,8 @@ function Index(){
   this.jsonDocument = {jsonfile:[]},
   this.emptyDatasource = { isEmpty: true },
   this.indexCreated = { isCreated: false },
+  this.documentLength = 0,
+  this.indexArray = [],
 
   this.createIndex = function(filepath){
      if(this.indexCreated.isCreated){
@@ -63,15 +65,15 @@ function prepareSyncRequest(filepath, syncRequest) {
   syncRequest.send();
 }
 
-function processData(jsonData, indexArray) {
+function processData(jsonData) {
   for (var value in jsonData) {
-    indexArray
+    this.indexArray
     .push(jsonData[value]
     .title.concat(' ')
     .concat(jsonData[value]
     .text)
-    .toLowerCase().split(' ').sort());
-    indexArray[value] = eliminateDupicateWords(replaceNonWord(indexArray[value]));
+    .toLowerCase().split(' '));
+    this.indexArray[value] = eliminateDupicateWords(replaceNonWord(this.indexArray[value]));
   }
 }
 
@@ -79,13 +81,29 @@ function parseData(syncRequest) {
   if (syncRequest.readyState === 4 && syncRequest.status === 200) {
     var jsonData = JSON.parse(syncRequest.responseText);
     saveJsonFile(jsonData);
-    saveDocumentLength(documentlength, jsonData);
-    getSyncResponse(jsonData, emptyDatasource, indexArray, indexCreated, indexObject);
+    saveDocumentLength(jsonData);
+    getSyncResponse(jsonData);
   }
 }
 
-function saveJsonFile(document, jsonData) {
+function saveJsonFile(jsonData) {
   this.jsonDocument.jsonfile = jsonData;
+}
+function saveDocumentLength(documentlength, jsonData) {
+  this.documentLength += jsonData.length;
+}
+function getSyncResponse(jsonData) {
+  if (jsonData.length >= 0 && jsonData !== []) {
+    this.emptyDatasource.isEmpty = false;
+    processData(jsonData);
+    isIndexcreated();
+    indexObject.strings = createIndex(indexArray);
+  }
+}
+function isIndexcreated() {
+  if (this.indexArray.length > 0) {
+    this.indexCreated.isCreated = true;
+  }
 }
 
 
