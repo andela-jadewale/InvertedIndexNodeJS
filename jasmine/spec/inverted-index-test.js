@@ -10,27 +10,32 @@
 var invertedindex;
 
 describe("Read book data", function() {
-  beforeEach( function (){
-    invertedindex = new Index();
-    invertedindex.createIndex(invertedindex.getHostAddress()+'/books.json');
-  }) ;
-
-  it("Checks if datasource is populated", function() {
-
-    //check is empty datasource flag is empty
-    expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
-    //check taht datasource file is not empty array
-    expect(invertedindex.jsonDocument.jsonfile).not.toBe([]);
-
-    //check document length > 0
-    expect(invertedindex.documentLength).toBeGreaterThan(0);
 
 
-  });
+  describe('test something', function() {
+    beforeEach( function (){
+      invertedindex = new Index();
+      invertedindex.createIndex(invertedindex.getHostAddress()+'/books.json');
+      }) ;
+    it('Checks if datasource is populated ', function(done) {
+        setTimeout(function() {
+            expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
+            //check is empty datasource flag is empty
+            expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
+            //check taht datasource file is not empty array
+            expect(invertedindex.jsonDocument.jsonfile).not.toBe([]);
+            //check document length > 0
+            expect(invertedindex.documentLength).toBeGreaterThan(0);
+            done();
+        },1000);
+    });
 });
 
 
-/*
+});
+
+
+
 describe("Populate Index", function() {
   it("Index are created when json file is read", function() {
     //check index created is true
@@ -42,23 +47,19 @@ describe("Index Mapping", function() {
   it("Index are mapped to correct strings", function() {
 
     //set keyword to alice and test index
-    invertedindex.keyword = "alice";
-    expect(invertedindex.searchIndex()).toEqual([0, 1]);
+    expect(invertedindex.getIndex('alice')).toEqual([0, 1]);
 
     //set keyword to and then test index
-    invertedindex.keyword = "and";
-    expect(invertedindex.searchIndex()).toEqual([1]);
+    expect(invertedindex.getIndex("and")).toEqual([1]);
 
     //add upper case A and test index
-    invertedindex.keyword = "AliCe";
-    expect(invertedindex.searchIndex()).toEqual([0, 1]);
+    expect(invertedindex.getIndex("AliCe")).toEqual([0, 1]);
 
     //search empty word and test index
-    invertedindex.keyword = "";
-    expect(invertedindex.searchIndex()).toEqual(undefined);
+    expect(invertedindex.getIndex("")).toEqual(undefined);
   });
 });
-
+/*
 describe("Search Index", function() {
   it("Search index returns object with search query", function() {
 

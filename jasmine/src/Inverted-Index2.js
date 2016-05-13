@@ -14,6 +14,9 @@ function Index(){
   this.documentLength = 0,
   this.indexArray = [],
   this.indexObject = {strings:[]},
+  this.getIndex = function(key){
+    return getIndexPosition(key, this.indexObject.strings);
+  }
 
 
   this.createIndex = function(filepath){
@@ -62,7 +65,7 @@ function addSynclistener(syncRequest) {
 }
 
 function prepareSyncRequest(filepath, syncRequest) {
-  syncRequest.open('GET', filepath, false);
+  syncRequest.open('GET', filepath, true);
   syncRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
   syncRequest.send();
 }
@@ -74,7 +77,7 @@ function processData(jsonData) {
     .title.concat(' ')
     .concat(jsonData[value]
     .text)
-    .toLowerCase().split(' '));
+    .toLowerCase().split(' ').sort());
     INDEX.indexArray[value] = eliminateDupicateWords(replaceNonWord(INDEX.indexArray[value]));
   }
 }
@@ -146,6 +149,11 @@ function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
     uniqueWords.push(seperateWords[index]);
   }
   return uniqueWords;
+}
+
+
+function getIndexPosition(key, indexobject) {
+  return indexobject[key.toLowerCase()];
 }
 
 
