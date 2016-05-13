@@ -46,38 +46,19 @@ describe("Populate Index", function() {
 describe("Index Mapping", function() {
   it("Index are mapped to correct strings", function() {
 
-    //set keyword to alice and test index
-    expect(invertedindex.getIndex('alice')).toEqual([0, 1]);
-
-    //set keyword to and then test index
-    expect(invertedindex.getIndex("and")).toEqual([1]);
-
-    //add upper case A and test index
-    expect(invertedindex.getIndex("AliCe")).toEqual([0, 1]);
-
-    //search empty word and test index
-    expect(invertedindex.getIndex("")).toEqual(undefined);
+    expect(invertedindex.getIndex().and).toEqual([1]);
+    expect(invertedindex.getIndex().alice).toEqual([0, 1]);
   });
 });
-/*
+
+
+
 describe("Search Index", function() {
   it("Search index returns object with search query", function() {
 
-    //test search with alice
-    invertedindex.keyword = "alice";
-    expect(invertedindex.lowerCaseTransform(invertedindex.document.jsonfile[0].title)).
-    toContain(invertedindex.lowerCaseTransform(invertedindex.keyword));
-
-      //test search upper case
-    invertedindex.keyword = "alIce";
-    expect(invertedindex.lowerCaseTransform(invertedindex.document.jsonfile[0].title)).
-    toContain(invertedindex.lowerCaseTransform(invertedindex.keyword));
-
-
-      //test search with non words
-    invertedindex.keyword = "alIce..";
-    expect(invertedindex.lowerCaseTransform(invertedindex.document.jsonfile[0].title)).
-    toContain(replaceNonWord(invertedindex.lowerCaseTransform(invertedindex.keyword)));
+    expect(invertedindex.searchIndex('and')).toEqual([1]);
+    expect(invertedindex.searchIndex('alice')).toEqual([0, 1]);
+    expect(invertedindex.searchIndex('wonderland')).toEqual([0]);
+    expect(invertedindex.searchIndex('alice and wonderland in')).toEqual([[ [ 0, 1 ], [ 1 ], [ 0 ], [ 0 ] ] ]);
   });
 });
-*/

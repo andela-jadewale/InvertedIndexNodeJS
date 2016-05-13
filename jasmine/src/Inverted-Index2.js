@@ -1,7 +1,8 @@
 'use strict'
 
+
 function Index(){
-  var INDEX = this;
+  var _this = this;
   this.getHostAddress = function() {
       return location.protocol.concat('//').concat(location.host);
     },
@@ -15,10 +16,14 @@ function Index(){
   this.indexArray = [],
   this.indexObject = {strings:[]},
   this.getIndex = function(key){
-    return getIndexPosition(key, this.indexObject.strings);
+    return this.indexObject.strings;
   }
-
-
+  this.searchIndex = function(word) {
+      return getIndexPosition(word, this.indexObject.strings);
+    },
+  this.lowerCaseTransform = function(text) {
+      return lowerCase(text);
+    };
   this.createIndex = function(filepath){
      if(this.indexCreated.isCreated){
 
@@ -27,6 +32,7 @@ function Index(){
     requestData(filepath);
   }
     }
+
 
 
 
@@ -72,13 +78,13 @@ function prepareSyncRequest(filepath, syncRequest) {
 
 function processData(jsonData) {
   for (var value in jsonData) {
-    INDEX.indexArray
+    _this.indexArray
     .push(jsonData[value]
     .title.concat(' ')
     .concat(jsonData[value]
     .text)
     .toLowerCase().split(' ').sort());
-    INDEX.indexArray[value] = eliminateDupicateWords(replaceNonWord(INDEX.indexArray[value]));
+    _this.indexArray[value] = eliminateDupicateWords(replaceNonWord(_this.indexArray[value]));
   }
 }
 
@@ -92,22 +98,22 @@ function parseData(syncRequest) {
 }
 
 function saveJsonFile(jsonData) {
-  INDEX.jsonDocument.jsonfile = jsonData;
+  _this.jsonDocument.jsonfile = jsonData;
 }
 function saveDocumentLength( jsonData) {
-  INDEX.documentLength += jsonData.length;
+  _this.documentLength += jsonData.length;
 }
 function getSyncResponse(jsonData) {
   if (jsonData.length >= 0 && jsonData !== []) {
-    INDEX.emptyDatasource.isEmpty = false;
+    _this.emptyDatasource.isEmpty = false;
     processData(jsonData);
     isIndexcreated();
-    INDEX.indexObject.strings = createIndex(INDEX.indexArray);
+    _this.indexObject.strings = createIndex(_this.indexArray);
   }
 }
 function isIndexcreated() {
-  if (INDEX.indexArray.length > 0) {
-    INDEX.indexCreated.isCreated = true;
+  if (_this.indexArray.length > 0) {
+    _this.indexCreated.isCreated = true;
   }
 }
 
@@ -153,7 +159,32 @@ function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
 
 
 function getIndexPosition(key, indexobject) {
-  return indexobject[key.toLowerCase()];
+  console.log(key +' '+indexobject)
+  if((typeof key === 'string') && key.indexOf(" ") === -1){
+    console.log(indexobject[key.toLowerCase()]+" returning")
+    return indexobject[key.toLowerCase()];
+  }
+
+
+
+
+  var tokens = key.split(" ");
+  console.log(tokens.length)
+
+  if((typeof key === 'string') && key.indexOf(" ") !== -1){
+    console.log("here");
+    var searcharray = []
+    for(var word = 0; word < tokens.length; word++){
+      searcharray.push(getIndexPosition(tokens[word], indexobject));
+    }
+    console.log(key+" sentence");
+    console.log(tokens)
+    return [searcharray];
+  }
+
+
+
+
 }
 
 
