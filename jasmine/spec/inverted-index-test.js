@@ -7,10 +7,15 @@
 /* global expect */
 'use strict'
 
-var invertedindex = new InvertedIndex();
+var invertedindex;
 
 describe("Read book data", function() {
+  beforeEach( function (){
+    invertedindex = new InvertedIndex()
+  }) ;
+
   it("Checks if datasource is populated", function() {
+
     //check is empty datasource flag is empty
     expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
     //check taht datasource file is not empty array
@@ -18,6 +23,8 @@ describe("Read book data", function() {
 
     //check document length > 0
     expect(invertedindex.documentLength.length).toBeGreaterThan(0);
+
+    console.log(invertedindex.emptyDatasource.isEmpty);
   });
 });
 
@@ -33,23 +40,23 @@ describe("Index Mapping", function() {
 
     //set keyword to alice and test index
     invertedindex.keyword = "alice";
-    expect(invertedindex.getIndex()).toEqual([0, 1]);
+    expect(invertedindex.searchIndex()).toEqual([0, 1]);
 
     //set keyword to and then test index
     invertedindex.keyword = "and";
-    expect(invertedindex.getIndex()).toEqual([1]);
+    expect(invertedindex.searchIndex()).toEqual([1]);
 
     //add upper case A and test index
     invertedindex.keyword = "AliCe";
-    expect(invertedindex.getIndex()).toEqual([0, 1]);
+    expect(invertedindex.searchIndex()).toEqual([0, 1]);
 
     //search empty word and test index
     invertedindex.keyword = "";
-    expect(invertedindex.getIndex()).toEqual(undefined);
+    expect(invertedindex.searchIndex()).toEqual(undefined);
   });
 });
 
-describe("Search query", function() {
+describe("Search Index", function() {
   it("Search index returns object with search query", function() {
 
     //test search with alice

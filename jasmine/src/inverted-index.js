@@ -38,15 +38,18 @@ function InvertedIndex() {
     //stores the search word
     this.keyword = '',
 
+    this.usepromise = req(this.getHostAddress()+'/books.json',this.emptyDatasource,
+      this.indexArray, this.indexObject,
+      this.uniqueIndex, this.document, this.documentLength),
     //request book.json and manipulate the file
-    this.readData = requestData(this.getHostAddress(),
+   this.readData = requestData(this.getHostAddress(),
       this.emptyDatasource, this.indexArray, this.indexObject,
       this.uniqueIndex, this.document, this.documentLength, this.indexCreated),
 
 
     // gets the location of the documents
-    this.getIndex = function() {
-      return getIndexPosition(this.keyword, this.indexObject.strings);
+    this.searchIndex = function(word) {
+      return getIndexPosition(word, this.indexObject.strings);
     },
 
     //transforms text to lower case
@@ -85,6 +88,44 @@ function requestData(source, emptyDatasource,
   }//end of try/catch block
 }
 
+
+
+function req(url,emptyDatasource, indexArray, indexCreated, indexObject, document,documentLength){
+return new Promise(function(resolve, reject) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url);
+    request.responseType = 'application/json';
+    request.send();
+    request.onload = function() {
+      if (request.status === 200) {
+        resolve(request.response);
+        parseDataHelp(request,emptyDatasource, indexArray, indexCreated, indexObject,document,documentLength)
+
+
+      } else {
+        reject(Error('Image didn\'t load successfully; error code:'
+                     + request.statusText));
+      }
+    };
+    request.onerror = function() {
+      reject(Error('There was a network error.'));
+    };
+
+  });
+ }
+
+ function parseDataHelp(syncRequest,emptyDatasource, indexArray, indexCreated, indexObject, document,documentlength){
+  var jsonData = JSON.parse(syncRequest.responseText);
+    saveJsonFile(document, jsonData);
+    saveDocumentLength(documentlength, jsonData);
+    getSyncResponse(jsonData, emptyDatasource, indexArray, indexCreated, indexObject);
+    console.log(emptyDatasource.isEmpty)
+ }
+
+ function test(req){
+  console.log(req)
+ console.log("yeah")
+ }
 /**
    * @param  {Object} request object
    * @param  {String} The datasource flag to set on request's response.
@@ -99,6 +140,7 @@ function requestData(source, emptyDatasource,
    * sets asynchronous to false
    * @return {void}
    */
+
 
 function addSynclistener(syncRequest, emptyDatasource, indexArray, indexObject,
   uniqueIndex, document, documentLength, indexCreated) {
@@ -121,7 +163,7 @@ function addSynclistener(syncRequest, emptyDatasource, indexArray, indexObject,
    */
 function prepareSyncRequest(source, syncRequest) {
 
-  syncRequest.open('GET', source.concat('/books.json'), false);
+  syncRequest.open('GET', source.concat('/books.json'), true);
   syncRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
   syncRequest.send();
 }
@@ -147,6 +189,8 @@ function parseData(syncRequest, emptyDatasource, indexArray, indexObject,
     saveJsonFile(document, jsonData);
     saveDocumentLength(documentlength, jsonData);
     //gets the books.json file
+
+
     getSyncResponse(jsonData, emptyDatasource, indexArray, indexCreated, indexObject);
   }
 }
@@ -229,7 +273,13 @@ function isIndexcreated(indexCreated, indexObject) {
   }
 }
 
-
+/**
+   * @param  {String} returns a lower case text
+   * @param  {Object} search object
+   * sets is created to true if object length > 0
+   *
+   * @return {void}
+   */
 function lowerCase(text) {
   return text.toLowerCase();
 }
