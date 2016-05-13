@@ -11,7 +11,8 @@ var invertedindex;
 
 describe("Read book data", function() {
   beforeEach( function (){
-    invertedindex = new InvertedIndex()
+    invertedindex = new Index();
+    invertedindex.createIndex(invertedindex.getHostAddress()+'/books.json');
   }) ;
 
   it("Checks if datasource is populated", function() {
@@ -19,15 +20,17 @@ describe("Read book data", function() {
     //check is empty datasource flag is empty
     expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
     //check taht datasource file is not empty array
-    expect(invertedindex.document.jsonfile).not.toBe([]);
+    expect(invertedindex.jsonDocument.jsonfile).not.toBe([]);
 
     //check document length > 0
-    expect(invertedindex.documentLength.length).toBeGreaterThan(0);
+    expect(invertedindex.documentLength).toBeGreaterThan(0);
 
-    console.log(invertedindex.emptyDatasource.isEmpty);
+
   });
 });
 
+
+/*
 describe("Populate Index", function() {
   it("Index are created when json file is read", function() {
     //check index created is true
@@ -76,3 +79,4 @@ describe("Search Index", function() {
     toContain(replaceNonWord(invertedindex.lowerCaseTransform(invertedindex.keyword)));
   });
 });
+*/

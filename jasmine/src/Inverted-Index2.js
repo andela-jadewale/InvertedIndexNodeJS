@@ -1,7 +1,7 @@
 'use strict'
 
 function Index(){
-
+  var INDEX = this;
   this.getHostAddress = function() {
       return location.protocol.concat('//').concat(location.host);
     },
@@ -13,6 +13,8 @@ function Index(){
   this.indexCreated = { isCreated: false },
   this.documentLength = 0,
   this.indexArray = [],
+  this.indexObject = {strings:[]},
+
 
   this.createIndex = function(filepath){
      if(this.indexCreated.isCreated){
@@ -56,24 +58,24 @@ function requestData(filepath) {
 
 function addSynclistener(syncRequest) {
   //adds readystatechange listener, callback
-  syncRequest.addEventListener('readystatechange',parseData(syncRequest), false);
+  syncRequest.addEventListener('readystatechange',function(){parseData(syncRequest);}, false);
 }
 
 function prepareSyncRequest(filepath, syncRequest) {
-  syncRequest.open('GET', filepath, true);
+  syncRequest.open('GET', filepath, false);
   syncRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
   syncRequest.send();
 }
 
 function processData(jsonData) {
   for (var value in jsonData) {
-    this.indexArray
+    INDEX.indexArray
     .push(jsonData[value]
     .title.concat(' ')
     .concat(jsonData[value]
     .text)
     .toLowerCase().split(' '));
-    this.indexArray[value] = eliminateDupicateWords(replaceNonWord(this.indexArray[value]));
+    INDEX.indexArray[value] = eliminateDupicateWords(replaceNonWord(INDEX.indexArray[value]));
   }
 }
 
@@ -87,23 +89,63 @@ function parseData(syncRequest) {
 }
 
 function saveJsonFile(jsonData) {
-  this.jsonDocument.jsonfile = jsonData;
+  INDEX.jsonDocument.jsonfile = jsonData;
 }
-function saveDocumentLength(documentlength, jsonData) {
-  this.documentLength += jsonData.length;
+function saveDocumentLength( jsonData) {
+  INDEX.documentLength += jsonData.length;
 }
 function getSyncResponse(jsonData) {
   if (jsonData.length >= 0 && jsonData !== []) {
-    this.emptyDatasource.isEmpty = false;
+    INDEX.emptyDatasource.isEmpty = false;
     processData(jsonData);
     isIndexcreated();
-    indexObject.strings = createIndex(indexArray);
+    INDEX.indexObject.strings = createIndex(INDEX.indexArray);
   }
 }
 function isIndexcreated() {
-  if (this.indexArray.length > 0) {
-    this.indexCreated.isCreated = true;
+  if (INDEX.indexArray.length > 0) {
+    INDEX.indexCreated.isCreated = true;
   }
+}
+
+function createIndex(value) {
+  var indexedObject = {};
+  for (var index in value) {
+    for (var indexin in value[index]) {
+      if (value.toString().split(value[indexin]).length === 1){
+        indexedObject[value[index][indexin]] = [parseInt(index)];
+      }
+
+      else{indexedObject[value[index][indexin]] = [0, 1];
+      }
+      continue;
+    }
+  }
+  return indexedObject;
+}
+
+function lowerCase(text) {
+  return text.toLowerCase();
+}
+
+function replaceNonWord(value) {
+  return value.toString().replace(/\W+/g, ' ').toString();
+}
+
+function eliminateDupicateWords(value) {
+  var seperateWords = value.split(' ');
+  var uniqueWords = [];
+  return eliminateDuplicatewordsloop(seperateWords, uniqueWords);
+}
+
+function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
+  for (var index = 0; index < seperateWords.length; index++) {
+    if (uniqueWords.includes(seperateWords[index])){
+      continue;
+    }
+    uniqueWords.push(seperateWords[index]);
+  }
+  return uniqueWords;
 }
 
 
