@@ -19,6 +19,9 @@ function Index(){
   this.indexArray = [],
   this.indexObject = {strings:[]},
   this.getIndex = function(key){
+    if(key !== undefined){
+      return this.indexObject.strings[key]
+    }
     return this.indexObject.strings;
   }
   this.searchIndex = function(word) {
