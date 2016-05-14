@@ -22,7 +22,7 @@ function Index(){
     return this.indexObject.strings;
   }
   this.searchIndex = function(word) {
-      return getIndexPosition(word, this.indexObject.strings);
+      return getIndexPosition(replaceNonWord(word), this.indexObject.strings);
     },
   this.lowerCaseTransform = function(text) {
       return lowerCase(text);
@@ -85,10 +85,6 @@ function prepareSyncRequest(filepath, asyncRequest) {
    * @return {void}
    */
 function processData(jsonData) {
-  console.log(_this.documentLength)
-  for(var value = 0; value < _this.documentLength; value++ ){
-
-  }
   for (var value in jsonData) {
     _this.indexArray
     .push(jsonData[value]
@@ -106,7 +102,6 @@ function processData(jsonData) {
 function parseData(asyncRequest) {
   if (asyncRequest.readyState === 4 && asyncRequest.status === 200) {
     var jsonData = JSON.parse(asyncRequest.responseText);
-    console.log(jsonData);
     saveJsonFile(jsonData);
     saveDocumentLength(jsonData);
     getSyncResponse(jsonData);
@@ -125,7 +120,6 @@ function getSyncResponse(jsonData) {
     processData(jsonData);
     isIndexcreated();
     _this.indexObject.strings = createIndex(_this.indexArray);
-    console.log(_this.indexObject.strings)
   }
 }
 function isIndexcreated() {
