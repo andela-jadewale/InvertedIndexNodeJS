@@ -7,7 +7,9 @@
 /* global expect */
 'use strict'
 
+//variable to hold index instance
 var invertedindex;
+
 
 describe("Read book data", function() {
 
@@ -16,6 +18,8 @@ describe("Read book data", function() {
     beforeEach( function (){
       invertedindex = new Index();
       invertedindex.createIndex(invertedindex.getHostAddress()+'/books.json');
+      //calling create index twice
+      invertedindex.createIndex(invertedindex.getHostAddress()+'/read.json');
       }) ;
     it('Checks if datasource is populated ', function(done) {
         setTimeout(function() {
@@ -46,8 +50,14 @@ describe("Populate Index", function() {
 describe("Index Mapping", function() {
   it("Index are mapped to correct strings", function() {
 
-    expect(invertedindex.getIndex().and).toEqual([1]);
-    expect(invertedindex.getIndex().alice).toEqual([0, 1]);
+    expect(invertedindex.getIndex().and).toEqual([0,1]);
+    expect(invertedindex.getIndex().alice).toEqual([0]);
+    expect(invertedindex.getIndex().seek).toEqual([1]);
+    expect(invertedindex.getIndex().of).toEqual([0,1]);
+    //testing read.json
+    expect(invertedindex.getIndex().concise).toEqual([3]);
+    expect(invertedindex.getIndex().pocahontas).toEqual([2]);
+    expect(invertedindex.getIndex().a).toEqual([0,1,2]);
   });
 });
 
@@ -55,10 +65,9 @@ describe("Index Mapping", function() {
 
 describe("Search Index", function() {
   it("Search index returns object with search query", function() {
-
-    expect(invertedindex.searchIndex('and')).toEqual([1]);
-    expect(invertedindex.searchIndex('alice')).toEqual([0, 1]);
+    expect(invertedindex.searchIndex('and')).toEqual([0,1]);
+    expect(invertedindex.searchIndex('alice')).toEqual([0]);
     expect(invertedindex.searchIndex('wonderland')).toEqual([0]);
-    expect(invertedindex.searchIndex('alice and wonderland in')).toEqual([[ [ 0, 1 ], [ 1 ], [ 0 ], [ 0 ] ] ]);
+    expect(invertedindex.searchIndex('alice and wonderland in')).toEqual([ [ 0 ], [ 0,1 ], [ 0 ], [ 0 ] ] );
   });
 });

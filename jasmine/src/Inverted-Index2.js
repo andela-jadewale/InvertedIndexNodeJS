@@ -2,7 +2,10 @@
 
 
 function Index(){
+  // holds Index and its property
   var _this = this;
+
+  // get location of file
   this.getHostAddress = function() {
       return location.protocol.concat('//').concat(location.host);
     },
@@ -25,12 +28,7 @@ function Index(){
       return lowerCase(text);
     };
   this.createIndex = function(filepath){
-     if(this.indexCreated.isCreated){
-
-   }
-   else{
     requestData(filepath);
-  }
     }
 
 
@@ -38,59 +36,77 @@ function Index(){
 
 
 /**
-   * @param  {String} The host address
-   * @param  {String} The datasource flag to be set.
-   * @param  {Array} A list of all unique words array to be populated.
-   * @param  {Object} The words and documents location object to be populated.
-   * @param  {Array} .
-   * @param  {Object}The JSON file to be set
-   * @param  {Object} The original length of the JSON file.
-   * param   {Object} The Index created flag to be set
-   * creates the HttpRequest .
-   * adds a Listener for the requests callback
-   * sets request paramters and header
+   * @param  {String} The file path
    * @return {void}
    */
 function requestData(filepath) {
   try {
     //Instantiates a request object
-    var syncRequest = new XMLHttpRequest();
+    var asyncRequest = new XMLHttpRequest();
     //Adds on readystatechange listener to request object
-    addSynclistener(syncRequest);
-    //sets request objects parameters(request location) and heading
-    prepareSyncRequest(filepath, syncRequest);
+    addSynclistener(asyncRequest);
+    //sets request objects parameters(request location) and header
+    prepareSyncRequest(filepath, asyncRequest);
   } catch (exception) {
     console.log(exception);
   }//end of try/catch block
 }
 
-
-function addSynclistener(syncRequest) {
+/**
+   * @param  {Object} The request object
+   * sets on readystatechange listener
+   * @return {void}
+   */
+function addSynclistener(asyncRequest) {
   //adds readystatechange listener, callback
-  syncRequest.addEventListener('readystatechange',function(){parseData(syncRequest);}, false);
+  asyncRequest.addEventListener('readystatechange',function(){parseData(asyncRequest);}, true);
+}
+/**
+   * @param  {String} The file path
+   * @param  {Object} the request object
+   * Sends a get request and sets a calback function on request's response
+   * sets asynchronous to true
+   * sets request header and sends request
+   * @return {void}
+   */
+function prepareSyncRequest(filepath, asyncRequest) {
+  asyncRequest.open('GET', filepath, true);
+  asyncRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
+  asyncRequest.send();
 }
 
-function prepareSyncRequest(filepath, syncRequest) {
-  syncRequest.open('GET', filepath, true);
-  syncRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
-  syncRequest.send();
-}
 
+/**
+   * @param  {Object} books.json object
+   * populates the unique elements from jsonData and sorts them
+   * elimanates duplicate words and replaces non words
+   * re-initialises unique elements to sorted and unique words
+   *
+   * @return {void}
+   */
 function processData(jsonData) {
+  console.log(_this.documentLength)
+  for(var value = 0; value < _this.documentLength; value++ ){
+
+  }
   for (var value in jsonData) {
     _this.indexArray
     .push(jsonData[value]
-    .title.concat(' ')
+    .title
+    .concat(' ')
     .concat(jsonData[value]
     .text)
     .toLowerCase().split(' ').sort());
-    _this.indexArray[value] = eliminateDupicateWords(replaceNonWord(_this.indexArray[value]));
+    _this.indexArray[_this.indexArray.length - 1] =
+    eliminateDupicateWords(replaceNonWord(_this
+    .indexArray[_this.indexArray.length - 1] ));
   }
 }
 
-function parseData(syncRequest) {
-  if (syncRequest.readyState === 4 && syncRequest.status === 200) {
-    var jsonData = JSON.parse(syncRequest.responseText);
+function parseData(asyncRequest) {
+  if (asyncRequest.readyState === 4 && asyncRequest.status === 200) {
+    var jsonData = JSON.parse(asyncRequest.responseText);
+    console.log(jsonData);
     saveJsonFile(jsonData);
     saveDocumentLength(jsonData);
     getSyncResponse(jsonData);
@@ -98,7 +114,7 @@ function parseData(syncRequest) {
 }
 
 function saveJsonFile(jsonData) {
-  _this.jsonDocument.jsonfile = jsonData;
+  _this.jsonDocument.jsonfile.push(jsonData);
 }
 function saveDocumentLength( jsonData) {
   _this.documentLength += jsonData.length;
@@ -109,6 +125,7 @@ function getSyncResponse(jsonData) {
     processData(jsonData);
     isIndexcreated();
     _this.indexObject.strings = createIndex(_this.indexArray);
+    console.log(_this.indexObject.strings)
   }
 }
 function isIndexcreated() {
@@ -121,13 +138,12 @@ function createIndex(value) {
   var indexedObject = {};
   for (var index in value) {
     for (var indexin in value[index]) {
-      if (value.toString().split(value[indexin]).length === 1){
-        indexedObject[value[index][indexin]] = [parseInt(index)];
-      }
-
-      else{indexedObject[value[index][indexin]] = [0, 1];
-      }
-      continue;
+        if(indexedObject[value[index][indexin]] !== undefined ){
+          indexedObject[value[index][indexin]].push(parseInt(index));
+        }
+        else{
+          indexedObject[value[index][indexin]] = [parseInt(index)];
+        }
     }
   }
   return indexedObject;
@@ -143,6 +159,7 @@ function replaceNonWord(value) {
 
 function eliminateDupicateWords(value) {
   var seperateWords = value.split(' ');
+
   var uniqueWords = [];
   return eliminateDuplicatewordsloop(seperateWords, uniqueWords);
 }
@@ -159,27 +176,16 @@ function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
 
 
 function getIndexPosition(key, indexobject) {
-  console.log(key +' '+indexobject)
   if((typeof key === 'string') && key.indexOf(" ") === -1){
-    console.log(indexobject[key.toLowerCase()]+" returning")
     return indexobject[key.toLowerCase()];
   }
-
-
-
-
   var tokens = key.split(" ");
-  console.log(tokens.length)
-
   if((typeof key === 'string') && key.indexOf(" ") !== -1){
-    console.log("here");
     var searcharray = []
     for(var word = 0; word < tokens.length; word++){
       searcharray.push(getIndexPosition(tokens[word], indexobject));
     }
-    console.log(key+" sentence");
-    console.log(tokens)
-    return [searcharray];
+    return searcharray;
   }
 
 
