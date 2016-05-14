@@ -1,188 +1,122 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* global expect */
 'use strict'
 
-
-function Index(){
-  // holds Index and its property
-  var _this = this;
-
-  // get location of file
-  this.getHostAddress = function() {
-      return location.protocol.concat('//').concat(location.host);
-    },
-  this.file = function (fileName){
-      return fileName;
-    },
-  this.jsonDocument = {jsonfile:[]},
-  this.emptyDatasource = { isEmpty: true },
-  this.indexCreated = { isCreated: false },
-  this.documentLength = 0,
-  this.indexArray = [],
-  this.indexObject = {strings:[]},
-  this.getIndex = function(key){
-    if(key !== undefined){
-      return this.indexObject.strings[key]
-    }
-    return this.indexObject.strings;
-  }
-  this.searchIndex = function(word) {
-      return getIndexPosition(replaceNonWord(word), this.indexObject.strings);
-    },
-  this.lowerCaseTransform = function(text) {
-      return lowerCase(text);
-    };
-  this.createIndex = function(filepath){
-    requestData(filepath);
-    }
+//variable to hold index instance
+var invertedindex;
+var documentLength;
 
 
+describe("Read book data", function() {
+
+
+  describe('Initialises Index object', function() {
+    beforeEach( function (){
+      invertedindex = new Index();
+      invertedindex.createIndex(invertedindex.getHostAddress()+'/books.json');
+
+      }) ;
+    it('Checks if datasource is populated ', function(done) {
+        setTimeout(function() {
+            expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
+            //check isEmpty datasource flag is empty
+            expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
+            //check  datasource file is not empty array
+            expect(invertedindex.jsonDocument.jsonfile).not.toBe([]);
+
+
+            for(var obj = 0; obj < invertedindex.jsonDocument.jsonfile.length; obj++){
+                for(var index in invertedindex.jsonDocument.jsonfile[obj]){
+                  //check if JSON objects() values are strings
+                 expect(typeof invertedindex.jsonDocument.jsonfile[obj][index].title).toEqual('string');
+                 expect(typeof invertedindex.jsonDocument.jsonfile[obj][index].text).toEqual('string');
+                }
+
+              }
+            //check Index document length > 0
+            expect(invertedindex.documentLength).toBeGreaterThan(0);
+            expect(invertedindex.documentLength).toEqual(2);
+            //setting test document length = 2
+            documentLength = invertedindex.documentLength;
+            done();
+        },1000);
+    });
+});
+
+});
 
 
 
-/**
-   * @param  {String} The file path
-   * @return {void}
-   */
-function requestData(filepath) {
-  try {
-    //Instantiates a request object
-    var asyncRequest = new XMLHttpRequest();
-    //Adds on readystatechange listener to request object
-    addSynclistener(asyncRequest);
-    //sets request objects parameters(request location) and header
-    prepareSyncRequest(filepath, asyncRequest);
-  } catch (exception) {
-    console.log(exception);
-  }//end of try/catch block
-}
+describe("Populate Index", function() {
+  it("Index are created when json file is read", function() {
+    //check index created is true
+    expect(invertedindex.indexCreated.isCreated).toBe(true);
+    //calling create index again
+    invertedindex.createIndex(invertedindex.getHostAddress()+'/read.json');
+    it('Test book.json file is not overwritten ', function(done) {
+    setTimeout(function(){
+      /*testing document length > 2
+      create index does not overwrite*/
+      expect(invertedindex.documentLength).toBeGreaterThan(2)
+;      done();
+    }, 1000);
+});
 
-/**
-   * @param  {Object} The request object
-   * sets on readystatechange listener
-   * @return {void}
-   */
-function addSynclistener(asyncRequest) {
-  //adds readystatechange listener, callback
-  asyncRequest.addEventListener('readystatechange',function(){parseData(asyncRequest);}, true);
-}
-/**
-   * @param  {String} The file path
-   * @param  {Object} the request object
-   * Sends a get request and sets a calback function on request's response
-   * sets asynchronous to true
-   * sets request header and sends request
-   * @return {void}
-   */
-function prepareSyncRequest(filepath, asyncRequest) {
-  asyncRequest.open('GET', filepath, true);
-  asyncRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
-  asyncRequest.send();
-}
+  });
+});
 
+describe("Index Mapping", function() {
+  it("Index are mapped to correct strings", function() {
 
-/**
-   * @param  {Object} books.json object
-   * populates the unique elements from jsonData and sorts them
-   * elimanates duplicate words and replaces non words
-   * re-initialises unique elements to sorted and unique words
-   *
-   * @return {void}
-   */
-function processData(jsonData) {
-  for (var value in jsonData) {
-    _this.indexArray
-    .push(jsonData[value]
-    .title
-    .concat(' ')
-    .concat(jsonData[value]
-    .text)
-    .toLowerCase().split(' ').sort());
-    _this.indexArray[_this.indexArray.length - 1] =
-    eliminateDupicateWords(replaceNonWord(_this
-    .indexArray[_this.indexArray.length - 1] ));
-  }
-}
+    expect(invertedindex.getIndex().and).toEqual([0,1]);
+    expect(invertedindex.getIndex().alice).toEqual([0]);
+    //get index takes string argument
+    expect(invertedindex.getIndex('alice')).toEqual([0]);
+    expect(invertedindex.getIndex().seek).toEqual([1]);
+    expect(invertedindex.getIndex().of).toEqual([0,1]);
+    //testing read.json
+    it('Test read.json file ', function(done) {
+    setTimeout(function(){
+      expect(invertedindex.getIndex().and).toEqual([0,1]);
+      expect(invertedindex.getIndex().concise).toEqual([3]);
+      expect(invertedindex.getIndex().pocahontas).toEqual([2]);
+      expect(invertedindex.getIndex().a).toEqual([0,1,2]);
+      done();
+    }, 1000);
 
-function parseData(asyncRequest) {
-  if (asyncRequest.readyState === 4 && asyncRequest.status === 200) {
-    var jsonData = JSON.parse(asyncRequest.responseText);
-    saveJsonFile(jsonData);
-    saveDocumentLength(jsonData);
-    getSyncResponse(jsonData);
-  }
-}
+  });});
 
-function saveJsonFile(jsonData) {
-  _this.jsonDocument.jsonfile.push(jsonData);
-}
-function saveDocumentLength( jsonData) {
-  _this.documentLength += jsonData.length;
-}
-function getSyncResponse(jsonData) {
-  if (jsonData.length >= 0 && jsonData !== []) {
-    _this.emptyDatasource.isEmpty = false;
-    processData(jsonData);
-    isIndexcreated();
-    _this.indexObject.strings = createIndex(_this.indexArray);
-  }
-}
-function isIndexcreated() {
-  if (_this.indexArray.length > 0) {
-    _this.indexCreated.isCreated = true;
-  }
-}
-
-function createIndex(value) {
-  var indexedObject = {};
-  for (var index in value) {
-    for (var indexin in value[index]) {
-        if(indexedObject[value[index][indexin]] !== undefined ){
-          indexedObject[value[index][indexin]].push(parseInt(index));
-        }
-        else{
-          indexedObject[value[index][indexin]] = [parseInt(index)];
-        }
-    }
-  }
-  return indexedObject;
-}
-
-function lowerCase(text) {
-  return text.toLowerCase();
-}
-
-function replaceNonWord(value) {
-  return value.toString().replace(/\W+/g, ' ').toString();
-}
-
-function eliminateDupicateWords(value) {
-  var seperateWords = value.split(' ');
-
-  var uniqueWords = [];
-  return eliminateDuplicatewordsloop(seperateWords, uniqueWords);
-}
-
-function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
-  for (var index = 0; index < seperateWords.length; index++) {
-    if (uniqueWords.includes(seperateWords[index])){
-      continue;
-    }
-    uniqueWords.push(seperateWords[index]);
-  }
-  return uniqueWords;
-}
+});
 
 
-function getIndexPosition(key, indexobject) {
-  if((typeof key === 'string') && key.indexOf(" ") === -1){
-    return indexobject[key.toLowerCase()];
-  }
-  var tokens = key.split(" ");
-  if((typeof key === 'string') && key.indexOf(" ") !== -1){
-    var searcharray = []
-    for(var word = 0; word < tokens.length; word++){
-      searcharray.push(getIndexPosition(tokens[word], indexobject));
-    }
-    return searcharray;
-  }
-}
-}
+
+describe("Search Index", function() {
+  it("Search index returns object with search query", function(done) {
+    setTimeout(function(){
+
+      expect(invertedindex.searchIndex('and')).toEqual([0,1]);
+      expect(invertedindex.searchIndex('alice')).toEqual([0]);
+
+      //testing milliseconds for 4 search's
+      var d = new Date();
+      var n = d.getTime();
+      expect(invertedindex.searchIndex('wonderland')).toEqual([0]);
+      expect(invertedindex.searchIndex('alice and wonderland in')).toEqual([ [ 0 ], [ 0,1 ], [ 0 ], [ 0 ] ] );
+      //testing complex words search
+      expect(invertedindex.searchIndex('Wonderland ?  . concise in / pocahontas, seek')).toEqual([[ 0 ], [ 3 ], [ 0 ], [ 2 ], [ 1 ]] );
+      //testing arrays
+      expect(invertedindex.searchIndex(['alice', 'and','wonderland', 'in'])).toEqual([ [ 0 ], [ 0,1 ], [ 0 ], [ 0 ] ] );
+      expect(invertedindex.searchIndex(['wonderland'])).toEqual([0]);
+      var s = d.getTime();
+      //time test to equal 0 milliseconds
+      expect(s-n).toEqual(0);
+      done();
+    }, 1000)
+
+  });
+});
