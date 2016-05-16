@@ -2,10 +2,8 @@
 
 
 function Index(){
-  // holds Index and its property
   var _this = this;
 
-  // get location of file
   this.getHostAddress = function() {
       return location.protocol.concat('//').concat(location.host);
     },
@@ -20,39 +18,35 @@ function Index(){
   this.indexObject = {strings:[]},
   this.getIndex = function(key){
     if(key !== undefined){
-      return this.indexObject.strings[key]
+      //initiateRequest(key);
+      return this.indexObject.strings[key];
     }
     return this.indexObject.strings;
-  }
+  },
   this.searchIndex = function(word) {
-      return getIndexPosition(replaceNonWord(word), this.indexObject.strings);
+      return (isValidData(word))?
+      getIndexPosition(replaceNonWord(word), this.indexObject.strings) : '';
+
     },
   this.lowerCaseTransform = function(text) {
       return lowerCase(text);
-    };
+    },
   this.createIndex = function(filepath){
-    requestData(filepath);
-    }
-
-
-
-
+    return (isValidData(filepath))? initiateRequest(filepath) : '';
+    };
 
 /**
    * @param  {String} The file path
    * @return {void}
    */
-function requestData(filepath) {
+function initiateRequest(filepath) {
   try {
-    //Instantiates a request object
     var asyncRequest = new XMLHttpRequest();
-    //Adds on readystatechange listener to request object
-    addSynclistener(asyncRequest);
-    //sets request objects parameters(request location) and header
-    prepareSyncRequest(filepath, asyncRequest);
+    addRequestListener(asyncRequest);
+    sendRequest(filepath, asyncRequest);
   } catch (exception) {
     console.log(exception);
-  }//end of try/catch block
+  }
 }
 
 /**
@@ -60,9 +54,10 @@ function requestData(filepath) {
    * sets on readystatechange listener
    * @return {void}
    */
-function addSynclistener(asyncRequest) {
+function addRequestListener(asyncRequest) {
   //adds readystatechange listener, callback
-  asyncRequest.addEventListener('readystatechange',function(){parseData(asyncRequest);}, true);
+  asyncRequest.addEventListener('readystatechange',
+    function(){callBack(asyncRequest);}, true);
 }
 /**
    * @param  {String} The file path
@@ -72,12 +67,28 @@ function addSynclistener(asyncRequest) {
    * sets request header and sends request
    * @return {void}
    */
-function prepareSyncRequest(filepath, asyncRequest) {
+function sendRequest(filepath, asyncRequest) {
   asyncRequest.open('GET', filepath, true);
   asyncRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
   asyncRequest.send();
 }
 
+function callBack(asyncRequest) {
+  if (asyncRequest.readyState === 4 && asyncRequest.status === 200) {
+    var jsonData = JSON.parse(asyncRequest.responseText);
+    saveJsonFile(jsonData);
+    saveDocumentLength(jsonData);
+    processAsyncResponse(jsonData);
+  }
+}
+
+function saveJsonFile(jsonData) {
+  _this.jsonDocument.jsonfile.push(jsonData);
+}
+
+function saveDocumentLength( jsonData) {
+  _this.documentLength += jsonData.length;
+}
 
 /**
    * @param  {Object} books.json object
@@ -87,44 +98,30 @@ function prepareSyncRequest(filepath, asyncRequest) {
    *
    * @return {void}
    */
-function processData(jsonData) {
+function processAsyncResponse(jsonData) {
+  if (jsonData.length >= 0 && jsonData !== []) {
+    _this.emptyDatasource.isEmpty = false;
+    processAsyncData(jsonData);
+    isIndexcreated();
+    _this.indexObject.strings = createIndex(_this.indexArray);
+  }
+}
+
+function processAsyncData(jsonData) {
   for (var value in jsonData) {
     _this.indexArray
-    .push(jsonData[value]
-    .title
-    .concat(' ')
-    .concat(jsonData[value]
-    .text)
-    .toLowerCase().split(' ').sort());
+     .push(jsonData[value]
+     .title
+     .concat(' ')
+     .concat(jsonData[value]
+     .text)
+     .toLowerCase().split(' ').sort());
     _this.indexArray[_this.indexArray.length - 1] =
     eliminateDupicateWords(replaceNonWord(_this
     .indexArray[_this.indexArray.length - 1] ));
   }
 }
 
-function parseData(asyncRequest) {
-  if (asyncRequest.readyState === 4 && asyncRequest.status === 200) {
-    var jsonData = JSON.parse(asyncRequest.responseText);
-    saveJsonFile(jsonData);
-    saveDocumentLength(jsonData);
-    getSyncResponse(jsonData);
-  }
-}
-
-function saveJsonFile(jsonData) {
-  _this.jsonDocument.jsonfile.push(jsonData);
-}
-function saveDocumentLength( jsonData) {
-  _this.documentLength += jsonData.length;
-}
-function getSyncResponse(jsonData) {
-  if (jsonData.length >= 0 && jsonData !== []) {
-    _this.emptyDatasource.isEmpty = false;
-    processData(jsonData);
-    isIndexcreated();
-    _this.indexObject.strings = createIndex(_this.indexArray);
-  }
-}
 function isIndexcreated() {
   if (_this.indexArray.length > 0) {
     _this.indexCreated.isCreated = true;
@@ -171,18 +168,23 @@ function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
   return uniqueWords;
 }
 
-
 function getIndexPosition(key, indexobject) {
-  if((typeof key === 'string') && key.indexOf(" ") === -1){
+  if((typeof key === 'string') && key.indexOf(' ') === -1){
     return indexobject[key.toLowerCase()];
   }
-  var tokens = key.split(" ");
-  if((typeof key === 'string') && key.indexOf(" ") !== -1){
-    var searcharray = []
+  var tokens = key.split(' ');
+  if((typeof key === 'string') && key.indexOf(' ') !== -1){
+    var searcharray = [];
     for(var word = 0; word < tokens.length; word++){
       searcharray.push(getIndexPosition(tokens[word], indexobject));
     }
     return searcharray;
   }
 }
+
+function isValidData(data){
+  return ( data.length > 0  && data !== undefined && data !== null &&
+   data !== isNaN )? true:false ;
+}
+
 }
