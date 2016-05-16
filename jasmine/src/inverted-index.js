@@ -1,36 +1,35 @@
-'use strict'
-
 
 function Index(){
+  'use strict';
   var _this = this;
 
   this.getHostAddress = function() {
       return location.protocol.concat('//').concat(location.host);
-    },
+    };
   this.file = function (fileName){
       return fileName;
-    },
-  this.jsonDocument = {jsonfile:[]},
-  this.emptyDatasource = { isEmpty: true },
-  this.indexCreated = { isCreated: false },
-  this.documentLength = 0,
-  this.indexArray = [],
-  this.indexObject = {strings:[]},
+    };
+  this.jsonDocument = {jsonfile:[]};
+  this.emptyDatasource = { isEmpty: true };
+  this.indexCreated = { isCreated: false };
+  this.documentLength = 0;
+  this.indexArray = [];
+  this.indexObject = {strings:[]};
   this.getIndex = function(key){
     if(key !== undefined){
       //initiateRequest(key);
       return this.indexObject.strings[key];
     }
     return this.indexObject.strings;
-  },
+  };
   this.searchIndex = function(word) {
       return (isValidData(word))?
       getIndexPosition(replaceNonWord(word), this.indexObject.strings) : '';
 
-    },
+    };
   this.lowerCaseTransform = function(text) {
       return lowerCase(text);
-    },
+    };
   this.createIndex = function(filepath){
     return (isValidData(filepath))? initiateRequest(filepath) : '';
     };
