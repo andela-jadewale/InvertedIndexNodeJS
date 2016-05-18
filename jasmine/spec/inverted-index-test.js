@@ -17,7 +17,7 @@ describe('Read book data', function() {
         setTimeout(function() {
             expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
             expect(invertedindex.jsonDocument.jsonfile).not.toBe([]);
-
+       //loops through  to assert json values are strings
        it('Checks objects in json array contain strings ', function(done) {
              var length = invertedindex.jsonDocument.jsonfile.length;
             for(var obj = 0; obj < length; obj++){
