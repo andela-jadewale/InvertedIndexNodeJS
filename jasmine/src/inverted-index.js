@@ -6,7 +6,7 @@ function Index(){
 'use strict';
   var _this = this;
 
-  this.jsonDocument = {jsonfile:[]};
+  this.jsonDocument = { jsonfile:[] };
 
   this.emptyDatasource = { isEmpty: true };
 
@@ -16,17 +16,17 @@ function Index(){
 
   this.indexArray = [];
 
-  this.indexObject = {strings:[]};
+  this.indexObject = { strings:[] };
 
   this.getHostAddress = function() {
       return location.protocol.concat('//').concat(location.host);
     };
 
-  this.file = function (fileName){
+  this.file = function (fileName) {
       return fileName;
     };
 
-  this.getIndex = function(key){
+  this.getIndex = function(key) {
     if(key !== undefined){
       // initiateRequest(key);
       return this.indexObject.strings[key];
@@ -44,7 +44,7 @@ function Index(){
       return lowerCase(text);
     };
 
-  this.createIndex = function(filepath){
+  this.createIndex = function(filepath) {
     return isValidData(filepath)? initiateRequest(filepath) : '';
     };
 
@@ -72,7 +72,9 @@ function initiateRequest(filepath) {
 function addRequestListener(asyncRequest) {
   // adds readystatechange listener, callback
   asyncRequest.addEventListener('readystatechange',
-    function(){callBack(asyncRequest);}, true);
+    function() {
+      callBack(asyncRequest);
+    }, true);
 }
 
 /**
@@ -165,7 +167,7 @@ function createIndex(value) {
   var indexedObject = {};
   for (var index in value) {
     for (var indexin in value[index]) {
-        if(indexedObject[value[index][indexin]] !== undefined ){
+        if(indexedObject[value[index][indexin]] !== undefined ) {
           // if word found again push index to the former
           indexedObject[value[index][indexin]].push(parseInt(index));
         }
@@ -208,7 +210,7 @@ function eliminateDupicateWords(value) {
 function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
   for (var index = 0; index < seperateWords.length; index++) {
     // if word has been put in array, continue (do not add)
-    if (uniqueWords.includes(seperateWords[index])){
+    if (uniqueWords.includes(seperateWords[index])) {
       continue;
     }
     uniqueWords.push(seperateWords[index]);
@@ -224,13 +226,13 @@ function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
    */
 function getIndexPosition(key, indexobject) {
   // checks if it a single word and return its position
-  if((typeof key === 'string') && key.indexOf(' ') === -1){
+  if((typeof key === 'string') && key.indexOf(' ') === -1) {
     return indexobject[key.toLowerCase()];
   }
   // splits words into one word and passes it recrsively to the method above
   var tokens = key.split(' ');
 
-  if((typeof key === 'string') && key.indexOf(' ') !== -1){
+  if((typeof key === 'string') && key.indexOf(' ') !== -1) {
     var searcharray = [];
     for(var word = 0; word < tokens.length; word++){
       // pushes the returned position to an array
@@ -242,8 +244,8 @@ function getIndexPosition(key, indexobject) {
 }
 
 // validates a data is truthy
-function isValidData(data){
-  return ( data.length > 0  && data !== undefined && data !== null &&
+function isValidData(data) {
+  return ( data.length   && data !== undefined && data !== null &&
    data !== isNaN )? true:false ;
 }
 

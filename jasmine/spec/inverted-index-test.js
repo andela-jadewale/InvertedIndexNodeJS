@@ -20,8 +20,8 @@ describe('Read book data', function() {
        // loops through  to assert json values are strings
        it('Checks objects in json array contain strings ', function(done) {
              var length = invertedindex.jsonDocument.jsonfile.length;
-            for(var obj = 0; obj < length; obj++){
-                for(var index in invertedindex.jsonDocument.jsonfile[obj]){
+            for(var obj = 0; obj < length; obj++) {
+                for(var index in invertedindex.jsonDocument.jsonfile[obj]) {
                   expect(typeof invertedindex.jsonDocument
                     .jsonfile[obj][index].title).toEqual('string');
                   expect(typeof invertedindex.jsonDocument
@@ -54,8 +54,8 @@ describe('Populate Index', function() {
     invertedindex.createIndex(invertedindex.getHostAddress()+'/read.json');
 
      it('Test book.json file is not overwritten ', function(done) {
-       setTimeout(function(){
-        // checks document length which shows create index did not overwrite previous
+       setTimeout(function() {
+        // document length which shows create index did not overwrite previous
         expect(invertedindex.documentLength).toBeGreaterThan(2)
   ;      done();
       }, 500);
@@ -87,7 +87,7 @@ describe('Index Mapping', function() {
 
 describe('Search Index', function() {
   it('Search index returns object with search query', function(done) {
-    setTimeout(function(){
+    setTimeout(function() {
       expect(invertedindex.searchIndex('and')).toEqual([0,1]);
       expect(invertedindex.searchIndex('alice')).toEqual([0]);
       expect(invertedindex.searchIndex('')).toEqual('');
