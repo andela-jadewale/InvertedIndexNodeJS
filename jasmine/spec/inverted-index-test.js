@@ -17,7 +17,7 @@ describe('Read book data', function() {
         setTimeout(function() {
             expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
             expect(invertedindex.jsonDocument.jsonfile).not.toBe([]);
-       //loops through  to assert json values are strings
+       // loops through  to assert json values are strings
        it('Checks objects in json array contain strings ', function(done) {
              var length = invertedindex.jsonDocument.jsonfile.length;
             for(var obj = 0; obj < length; obj++){
@@ -32,11 +32,11 @@ describe('Read book data', function() {
 
 
         it('Checks Increase in documents Length ', function(done) {
-            //checks document length is increased
+            // checks document length is increased
             expect(invertedindex.documentLength).toBeGreaterThan(0);
             expect(invertedindex.documentLength).toEqual(2);
-            //assigns a value to documenlength which will be checked after
-            //second call to create index
+            // assigns a value to documenlength which will be checked after
+            // second call to create index
             documentLength = invertedindex.documentLength;
           });
             done();
@@ -55,7 +55,7 @@ describe('Populate Index', function() {
 
      it('Test book.json file is not overwritten ', function(done) {
        setTimeout(function(){
-        //checks document length which shows create index did not overwrite previous
+        // checks document length which shows create index did not overwrite previous
         expect(invertedindex.documentLength).toBeGreaterThan(2)
   ;      done();
       }, 500);
@@ -74,7 +74,7 @@ describe('Index Mapping', function() {
 
     it('Test read.json file ', function(done) {
       setTimeout(function(){
-        //testing index mapping
+        // testing index mapping
       expect(invertedindex.getIndex().and).toEqual([0,1]);
       expect(invertedindex.getIndex().concise).toEqual([3]);
       expect(invertedindex.getIndex().pocahontas).toEqual([2]);
@@ -95,12 +95,12 @@ describe('Search Index', function() {
       expect(invertedindex.searchIndex('wonderland')).toEqual([0]);
       expect(invertedindex.searchIndex('alice and wonderland in'))
         .toEqual([ [ 0 ], [ 0,1 ], [ 0 ], [ 0 ] ] );
-        //test complicated search works
+        // test complicated search works
       expect(invertedindex.searchIndex('Wonderland ?  . concise in '+
         '/ pocahontas, seek'))
         .toEqual([[ 0 ], [ 3 ], [ 0 ], [ 2 ], [ 1 ]] );
 
-        //test an array passed into the search works
+        // test an array passed into the search works
       expect(invertedindex.searchIndex([['alice', 'and','wonderland', 'in']]))
         .toEqual([ [ 0 ], [ 0,1 ], [ 0 ], [ 0 ] ] );
 
@@ -110,7 +110,7 @@ describe('Search Index', function() {
       expect(invertedindex.searchIndex('alice and wonderland in'))
         .toEqual([ [ 0 ], [ 0,1 ], [ 0 ], [ 0 ] ] );
       var presentdate = new  Date();
-      //test time to complete 7 search's will be less than 5 milliseconds
+      // test time to complete 7 search's will be less than 5 milliseconds
       expect(presentdate.getMilliseconds() - pastdate.getMilliseconds() )
       .toBeLessThan(5);
       done();

@@ -22,7 +22,7 @@ function Index(){
 
   this.getIndex = function(key){
     if(key !== undefined){
-      //initiateRequest(key);
+      // initiateRequest(key);
       return this.indexObject.strings[key];
     }
     return this.indexObject.strings;
@@ -64,7 +64,7 @@ function initiateRequest(filepath) {
    * @return {void}
    */
 function addRequestListener(asyncRequest) {
-  //adds readystatechange listener, callback
+  // adds readystatechange listener, callback
   asyncRequest.addEventListener('readystatechange',
     function(){callBack(asyncRequest);}, true);
 }
@@ -124,9 +124,9 @@ function processAsyncResponse(jsonData) {
    * @return {void}
    */
 function processAsyncData(jsonData) {
-  //loop through jsonobject
-  //sorts,replace none words, and duplicate words
-  //then assigns  to array
+  // loop through jsonobject
+  // sorts,replace none words, and duplicate words
+  // then assigns  to array
   for (var value in jsonData) {
     _this.indexArray
      .push(jsonData[value]
@@ -140,7 +140,7 @@ function processAsyncData(jsonData) {
     .indexArray[_this.indexArray.length - 1] ));
   }
 }
-//sets iscreated to true
+// sets iscreated to true
 function isIndexcreated() {
   if (_this.indexArray.length > 0) {
     _this.indexCreated.isCreated = true;
@@ -196,7 +196,7 @@ function eliminateDupicateWords(value) {
    */
 function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
   for (var index = 0; index < seperateWords.length; index++) {
-    //if word has been put in array, continue (do not add)
+    // if word has been put in array, continue (do not add)
     if (uniqueWords.includes(seperateWords[index])){
       continue;
     }
@@ -211,24 +211,24 @@ function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
    *  @return {Array} the index o
    */
 function getIndexPosition(key, indexobject) {
-  //checks if it a single word and return its position
+  // checks if it a single word and return its position
   if((typeof key === 'string') && key.indexOf(' ') === -1){
     return indexobject[key.toLowerCase()];
   }
-  //splits words into one word and passes it recrsively to the method above
+  // splits words into one word and passes it recrsively to the method above
   var tokens = key.split(' ');
 
   if((typeof key === 'string') && key.indexOf(' ') !== -1){
     var searcharray = [];
     for(var word = 0; word < tokens.length; word++){
-      //pushes the returned position to an array
+      // pushes the returned position to an array
       searcharray.push(getIndexPosition(tokens[word], indexobject));
     }
-    //returns the final array with elements
+    // returns the final array with elements
     return searcharray;
   }
 }
-//validates a data is truthy
+// validates a data is truthy
 function isValidData(data){
   return ( data.length > 0  && data !== undefined && data !== null &&
    data !== isNaN )? true:false ;
