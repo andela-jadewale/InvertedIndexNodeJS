@@ -6,22 +6,22 @@ var invertedindex;
 var documentLength;
 
 
-describe('Initialises Index object', function() {
+describe('Initialises Index object', function () {
     beforeEach( function (){
       invertedindex = new Index();
       invertedindex.createIndex(invertedindex.getHostAddress() + '/books.json');
       }) ;
 
-describe('Read book data', function() {
-    it('Checks if datasource is populated ', function(done) {
-        setTimeout(function() {
+describe('Read book data', function () {
+    it('Checks if datasource is populated ', function (done) {
+        setTimeout (function () {
             expect(invertedindex.emptyDatasource.isEmpty).toBe(false);
             expect(invertedindex.jsonDocument.jsonfile).not.toBe([]);
        // loops through  to assert json values are strings
-       it('Checks objects in json array contain strings ', function(done) {
+       it('Checks objects in json array contain strings ', function (done) {
              var length = invertedindex.jsonDocument.jsonfile.length;
-            for(var obj = 0; obj < length; obj++) {
-                for(var index in invertedindex.jsonDocument.jsonfile[obj]) {
+            for (var obj = 0; obj < length; obj++) {
+                for (var index in invertedindex.jsonDocument.jsonfile[obj]) {
                   expect(typeof invertedindex.jsonDocument
                     .jsonfile[obj][index].title).toEqual('string');
                   expect(typeof invertedindex.jsonDocument
@@ -31,7 +31,7 @@ describe('Read book data', function() {
             });
 
 
-        it('Checks Increase in documents Length ', function(done) {
+        it('Checks Increase in documents Length ', function (done) {
             // checks document length is increased
             expect(invertedindex.documentLength).toBeGreaterThan(0);
             expect(invertedindex.documentLength).toEqual(2);
@@ -48,13 +48,13 @@ describe('Read book data', function() {
 
 
 
-describe('Populate Index', function() {
-  it('Index are created when json file is read', function() {
+describe('Populate Index', function () {
+  it('Index are created when json file is read', function () {
     expect(invertedindex.indexCreated.isCreated).toBe(true);
     invertedindex.createIndex(invertedindex.getHostAddress()+'/read.json');
 
-     it('Test book.json file is not overwritten ', function(done) {
-       setTimeout(function() {
+     it('Test book.json file is not overwritten ', function (done) {
+       setTimeout (function () {
         // document length which shows create index did not overwrite previous
         expect(invertedindex.documentLength).toBeGreaterThan(2)
   ;      done();
@@ -64,8 +64,8 @@ describe('Populate Index', function() {
   });
 });
 
-describe('Index Mapping', function() {
-  it('Index are mapped to correct strings', function() {
+describe('Index Mapping', function () {
+  it('Index are mapped to correct strings', function () {
     expect(invertedindex.getIndex().and).toEqual([0,1]);
     expect(invertedindex.getIndex().alice).toEqual([0]);
     expect(invertedindex.getIndex('alice')).toEqual([0]);
@@ -73,7 +73,7 @@ describe('Index Mapping', function() {
     expect(invertedindex.getIndex().of).toEqual([0,1]);
 
     it('Test read.json file ', function(done) {
-      setTimeout(function(){
+      setTimeout (function () {
         // testing index mapping
       expect(invertedindex.getIndex().and).toEqual([0,1]);
       expect(invertedindex.getIndex().concise).toEqual([3]);
@@ -85,9 +85,9 @@ describe('Index Mapping', function() {
 
 });
 
-describe('Search Index', function() {
+describe('Search Index', function () {
   it('Search index returns object with search query', function(done) {
-    setTimeout(function() {
+    setTimeout (function () {
       expect(invertedindex.searchIndex('and')).toEqual([0,1]);
       expect(invertedindex.searchIndex('alice')).toEqual([0]);
       expect(invertedindex.searchIndex('')).toEqual('');

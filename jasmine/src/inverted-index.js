@@ -18,7 +18,7 @@ function Index(){
 
   this.indexObject = { strings:[] };
 
-  this.getHostAddress = function() {
+  this.getHostAddress = function () {
       return location.protocol.concat('//').concat(location.host);
     };
 
@@ -26,7 +26,7 @@ function Index(){
       return fileName;
     };
 
-  this.getIndex = function(key) {
+  this.getIndex = function (key) {
     if(key !== undefined){
       // initiateRequest(key);
       return this.indexObject.strings[key];
@@ -34,17 +34,17 @@ function Index(){
     return this.indexObject.strings;
   };
 
-  this.searchIndex = function(word) {
+  this.searchIndex = function (word) {
       return isValidData(word)?
       getIndexPosition(replaceNonWord(word), this.indexObject.strings) : '';
 
     };
 
-  this.lowerCaseTransform = function(text) {
+  this.lowerCaseTransform = function (text) {
       return lowerCase(text);
     };
 
-  this.createIndex = function(filepath) {
+  this.createIndex = function (filepath) {
     return isValidData(filepath)? initiateRequest(filepath) : '';
     };
 
@@ -72,7 +72,7 @@ function initiateRequest(filepath) {
 function addRequestListener(asyncRequest) {
   // adds readystatechange listener, callback
   asyncRequest.addEventListener('readystatechange',
-    function() {
+    function () {
       callBack(asyncRequest);
     }, true);
 }
@@ -167,11 +167,11 @@ function createIndex(value) {
   var indexedObject = {};
   for (var index in value) {
     for (var indexin in value[index]) {
-        if(indexedObject[value[index][indexin]] !== undefined ) {
+        if (indexedObject[value[index][indexin]] !== undefined ) {
           // if word found again push index to the former
           indexedObject[value[index][indexin]].push(parseInt(index));
         }
-        else{
+        else {
           //if word is found once just initialise to the index
           indexedObject[value[index][indexin]] = [parseInt(index)];
         }
@@ -226,8 +226,8 @@ function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
    */
 function getIndexPosition(key, indexobject) {
   // checks if it a single word and return its position
-  if((typeof key === 'string') && key.indexOf(' ') === -1) {
-    return indexobject[key.toLowerCase()];
+  if ((typeof key === 'string') && key.indexOf(' ') === -1) {
+        return indexobject[key.toLowerCase()];
   }
   // splits words into one word and passes it recrsively to the method above
   var tokens = key.split(' ');
