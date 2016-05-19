@@ -5,11 +5,17 @@
 function Index(){
 'use strict';
   var _this = this;
+
   this.jsonDocument = {jsonfile:[]};
+
   this.emptyDatasource = { isEmpty: true };
+
   this.indexCreated = { isCreated: false };
+
   this.documentLength = 0;
+
   this.indexArray = [];
+
   this.indexObject = {strings:[]};
 
   this.getHostAddress = function() {
@@ -68,6 +74,7 @@ function addRequestListener(asyncRequest) {
   asyncRequest.addEventListener('readystatechange',
     function(){callBack(asyncRequest);}, true);
 }
+
 /**
    * @param  {String} The file path
    * @param  {Object} the request object
@@ -115,6 +122,7 @@ function processAsyncResponse(jsonData) {
     _this.indexObject.strings = createIndex(_this.indexArray);
   }
 }
+
 /**
    * @param  {Object} books.json object
    * populates the unique elements from jsonData and sorts them
@@ -140,12 +148,14 @@ function processAsyncData(jsonData) {
     .indexArray[_this.indexArray.length - 1] ));
   }
 }
+
 // sets iscreated to true
 function isIndexcreated() {
   if (_this.indexArray.length > 0) {
     _this.indexCreated.isCreated = true;
   }
 }
+
 /**
    * @param  {Array} The unique elements
    * loops through all elements and gets the document location from the index
@@ -175,6 +185,7 @@ function lowerCase(text) {
 function replaceNonWord(value) {
   return value.toString().replace(/\W+/g, ' ').toString();
 }
+
 /**
    * @param  {Array} The unique array to be worked on
    * calls a function which checks for duplicate words
@@ -204,6 +215,7 @@ function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
   }
   return uniqueWords;
 }
+
 /**
    * @param  {String} The word to search
    * @param  {Object}  The object with Indexing
@@ -228,6 +240,7 @@ function getIndexPosition(key, indexobject) {
     return searcharray;
   }
 }
+
 // validates a data is truthy
 function isValidData(data){
   return ( data.length > 0  && data !== undefined && data !== null &&
