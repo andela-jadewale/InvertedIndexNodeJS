@@ -1,10 +1,8 @@
 (function () {
    'use strict';
-
-
 var invertedindex;
-var documentLength;
 
+var documentLength;
 
 describe('Initialises Index object', function () {
   beforeEach( function (){
