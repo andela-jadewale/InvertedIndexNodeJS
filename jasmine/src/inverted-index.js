@@ -1,21 +1,11 @@
-
-
-
-
 function Index(){
   'use strict';
   var _this = this;
-
   this.jsonDocument = { jsonfile:[] };
-
   this.emptyDatasource = { isEmpty: true };
-
   this.indexCreated = { isCreated: false };
-
   this.documentLength = 0;
-
   this.indexArray = [];
-
   this.indexObject = { strings:[] };
 
   this.getHostAddress = function () {
@@ -129,7 +119,6 @@ function Index(){
    * populates the unique elements from jsonData and sorts them
    * elimanates duplicate words and replaces non words
    * re-initialises unique elements to sorted and unique words
-   *
    * @return {void}
    */
   function processAsyncData(jsonData) {
