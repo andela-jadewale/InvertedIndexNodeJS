@@ -1,15 +1,15 @@
 function Index(){
   'use strict';
   var _this = this;
-  this.jsonDocument = { jsonfile:[] };
+  this.jsonDocument = { jsonFile:[] };
   this.emptyDatasource = { isEmpty: true };
   this.indexCreated = { isCreated: false };
   this.documentLength = 0;
   this.indexArray = [];
-  this.indexObject = { strings:[] };
+  this.indexObject = { data:[] };
 
   this.getHostAddress = function () {
-      return location.protocol + '//' + location.host;
+    return location.protocol + '//' + location.host;
     };
 
   this.file = function (fileName) {
@@ -19,14 +19,15 @@ function Index(){
   this.getIndex = function (key) {
     if(key !== undefined){
     // initiateRequest(key);
-      return this.indexObject.strings[key];
+      return this.indexObject.data[key];
     }
-    return this.indexObject.strings;
+
+    return this.indexObject.data;
   };
 
   this.searchIndex = function (word) {
     return isValidData(word)?
-    getIndexPosition(replaceNonWord(word), this.indexObject.strings) : '';
+    getIndexPosition(replaceNonWord(word), this.indexObject.data) : '';
   };
 
   this.lowerCaseTransform = function (text) {
@@ -59,7 +60,7 @@ function Index(){
    * @return {void}
    */
   function addRequestListener(asyncRequest) {
-  // adds readystatechange listener, callback
+    // adds readystatechange listener, callback
     asyncRequest.addEventListener('readystatechange',
       function () {
         callBack(asyncRequest);
@@ -90,7 +91,7 @@ function Index(){
   }
 
   function saveJsonFile(jsonData) {
-    _this.jsonDocument.jsonfile.push(jsonData);
+    _this.jsonDocument.jsonFile.push(jsonData);
   }
 
   function saveDocumentLength( jsonData) {
@@ -109,8 +110,8 @@ function Index(){
     if (jsonData.length >= 0 && jsonData !== []) {
       _this.emptyDatasource.isEmpty = false;
       processAsyncData(jsonData);
-      isIndexcreated();
-      _this.indexObject.strings = createIndex(_this.indexArray);
+      isIndexCreated();
+      _this.indexObject.data = createIndex(_this.indexArray);
     }
   }
 
@@ -122,25 +123,20 @@ function Index(){
    * @return {void}
    */
   function processAsyncData(jsonData) {
-  // loop through jsonobject
-  // sorts,replace none words, and duplicate words
-  // then assigns  to array
-    for (var value in jsonData) {
-      _this.indexArray
-      .push(jsonData[value]
-      .title
-      .concat(' ')
-      .concat(jsonData[value]
-      .text)
-      .toLowerCase().split(' ').sort());
-      _this.indexArray[_this.indexArray.length - 1] =
-      eliminateDupicateWords(replaceNonWord(_this
-      .indexArray[_this.indexArray.length - 1] ));
-    }
+    jsonData.forEach(function(value) {
+      var sorted = transformAsyncData(value.title+' '+value.text);
+      var uniqueWords = eliminateDuplicateWords(replaceNonWord(sorted));
+      _this.indexArray.push(uniqueWords);
+    });
+
+  }
+
+  function transformAsyncData(data){
+    return lowerCase(data).split(' ').sort();
   }
 
   // sets iscreated to true
-  function isIndexcreated() {
+  function isIndexCreated() {
     if (_this.indexArray.length > 0) {
       _this.indexCreated.isCreated = true;
     }
@@ -151,20 +147,15 @@ function Index(){
    * loops through all elements and gets the document location from the index
    * @return {Object} the Indexed object
    */
-  function createIndex(value) {
+  function createIndex(document) {
     var indexedObject = {};
-    for (var index in value) {
-      for (var indexin in value[index]) {
-        if (indexedObject[value[index][indexin]] !== undefined ) {
-            // if word found again push index to the former
-            indexedObject[value[index][indexin]].push(parseInt(index));
-          }
-        else {
-            //if word is found once just initialise to the index
-          indexedObject[value[index][indexin]] = [parseInt(index)];
-        }
-      }
-    }
+    document.forEach(function (docData,docIndex){
+     docData.filter(function (words){
+       (indexedObject[words] !== undefined)? indexedObject[words].push(docIndex)
+        : indexedObject[words] = [docIndex];
+     });
+    });
+
     return indexedObject;
   }
 
@@ -181,10 +172,11 @@ function Index(){
    * calls a function which checks for duplicate words
    * @return {Array} The full unique array
    */
-  function eliminateDupicateWords(value) {
+  function eliminateDuplicateWords(value) {
     var seperateWords = value.split(' ');
     var uniqueWords = [];
-    return eliminateDuplicatewordsloop(seperateWords, uniqueWords);
+
+    return processWords(seperateWords, uniqueWords);
   }
 
   /**
@@ -194,7 +186,7 @@ function Index(){
    * If it exists it skips it or else pushes it
    *  @return {Array} the unique words
    */
-  function eliminateDuplicatewordsloop(seperateWords, uniqueWords) {
+  function processWords(seperateWords, uniqueWords) {
     for (var index = 0; index < seperateWords.length; index++) {
       // if word has been put in array, continue (do not add)
       if (uniqueWords.includes(seperateWords[index])) {
@@ -202,6 +194,7 @@ function Index(){
       }
       uniqueWords.push(seperateWords[index]);
     }
+
     return uniqueWords;
   }
 
@@ -216,16 +209,16 @@ function Index(){
     if ((typeof key === 'string') && key.indexOf(' ') === -1) {
       return indexobject[key.toLowerCase()];
     }
-  // splits words into one word and passes it recrsively to the method above
+    // splits words into one word and passes it recrsively to the method above
     var tokens = key.split(' ');
     if((typeof key === 'string') && key.indexOf(' ') !== -1) {
-      var searcharray = [];
+      var searchArray = [];
       for(var word = 0; word < tokens.length; word++){
         // pushes the returned position to an array
-        searcharray.push(getIndexPosition(tokens[word], indexobject));
+        searchArray.push(getIndexPosition(tokens[word], indexobject));
       }
       // returns the final array with elements
-      return searcharray;
+      return searchArray;
     }
   }
 

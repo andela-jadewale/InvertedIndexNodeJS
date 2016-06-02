@@ -28,8 +28,6 @@ describe('Read book data', function () {
 
           expect(invertedIndex.documentLength).toBeGreaterThan(0);
           expect(invertedIndex.documentLength).toEqual(2);
-          // assigns a value to documenlength which will be checked after
-          // // second call to create index
           documentLength = invertedIndex.documentLength;
            done();
         },500);
