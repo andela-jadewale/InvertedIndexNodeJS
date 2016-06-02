@@ -12,7 +12,7 @@ An inverted index consists of a list of all the unique words that appear in any 
 1. Run `npm install express -g` on the terminal.  
 
 ## Usage
-Run `node main.js` on your terminal while within the **project root directory**.    
+Run `npm start` on your terminal while within the **project root directory**.    
 Navigate to `http://localhost:8084`  
 
 ## Contributing
