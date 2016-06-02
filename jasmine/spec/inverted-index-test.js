@@ -7,7 +7,7 @@ var documentLength;
 describe('Initialises Index object', function () {
   beforeEach( function (){
     invertedindex = new Index();
-    invertedindex.createIndex(invertedindex.getHostAddress() + '/books.json');
+    invertedindex.createIndex(invertedindex.getHostAddress() + '/jasmine/books.json');
   }) ;
 
 describe('Read book data', function () {
@@ -45,7 +45,7 @@ describe('Read book data', function () {
 describe('Populate Index', function () {
   it('Index are created when json file is read', function () {
     expect(invertedindex.indexCreated.isCreated).toBe(true);
-    invertedindex.createIndex(invertedindex.getHostAddress()+'/read.json');
+    invertedindex.createIndex(invertedindex.getHostAddress()+'/jasmine/read.json');
 
     it('Test book.json file is not overwritten ', function (done) {
       setTimeout (function () {
