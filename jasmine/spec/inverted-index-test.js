@@ -15,32 +15,23 @@ describe('Read book data', function () {
       expect(invertedIndex.emptyDatasource.isEmpty).toBe(false);
       expect(invertedIndex.jsonDocument.jsonFile).not.toBe([]);
       // loops through  to assert json values are strings
-        it('Checks objects in json array contain strings ', function (done) {
-          var length = invertedIndex.jsonDocument.jsonFile.length;
-          invertedIndex.jsonDocument.jsonFile.forEach(function(value,key) {
-          console.log(value+' is '+key);
+
+
+          //check string
+          invertedIndex.jsonDocument.jsonFile.forEach(function(value) {
+            value.map(function(obj){
+            expect(typeof obj.title).toEqual('string');
+            expect(typeof obj.text).toEqual('string');
+            });
+
           });
-          console.log('ddj')
-          for (var obj = 0; obj < length; obj++) {
-            for (var index in invertedIndex.jsonDocument.jsonFile[obj]) {
-              expect(typeof invertedIndex.jsonDocument
-                .jsonFile[obj][index].title).toEqual('string');
-              expect(typeof invertedIndex.jsonDocument
-                .jsonFile[obj][index].text).toEqual('string');
-            }
-          }
-        });
 
-
-        it('Checks Increase in documents Length ', function (done) {
-          // checks document length is increased
           expect(invertedIndex.documentLength).toBeGreaterThan(0);
           expect(invertedIndex.documentLength).toEqual(2);
           // assigns a value to documenlength which will be checked after
           // // second call to create index
           documentLength = invertedIndex.documentLength;
-        });
-          done();
+           done();
         },500);
     });
   });
@@ -50,7 +41,6 @@ describe('Populate Index', function () {
   it('Index are created when json file is read', function () {
     expect(invertedIndex.indexCreated.isCreated).toBe(true);
     invertedIndex.createIndex(invertedIndex.getHostAddress()+'/jasmine/read.json');
-
     it('Test book.json file is not overwritten ', function (done) {
       setTimeout (function () {
       // document length which shows create index did not overwrite previous

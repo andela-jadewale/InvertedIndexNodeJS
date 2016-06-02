@@ -9,7 +9,7 @@ function Index(){
   this.indexObject = { strings:[] };
 
   this.getHostAddress = function () {
-      return location.protocol.concat('//').concat(location.host);
+      return location.protocol + '//' + location.host;
     };
 
   this.file = function (fileName) {
@@ -231,8 +231,7 @@ function Index(){
 
   // validates a data is truthy
   function isValidData(data) {
-    return ( data.length   && data !== undefined && data !== null &&
-      data !== isNaN )? true:false ;
+    return ( ['',undefined,null,isNaN].indexOf(data) === -1)? true:false ;
   }
 
 }
