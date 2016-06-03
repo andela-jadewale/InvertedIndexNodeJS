@@ -14,7 +14,7 @@ function Index(){
    */
   this.getHostAddress = function () {
     return location.protocol + '//' + location.host;
-    };
+  };
 
   /**
    * sets filename to retrieve document
@@ -32,7 +32,7 @@ function Index(){
    */
   this.getIndex = function (key) {
     if(key !== undefined){
-    // initiateRequest(key);
+      // initiateRequest(key);
       return this.indexObject.data[key];
     }
 
@@ -135,7 +135,7 @@ function Index(){
    * increases the flag which saves documents length
    * @return {void}
    */
-  function saveDocumentLength( jsonData) {
+  function saveDocumentLength(jsonData) {
     _this.documentLength += jsonData.length;
   }
 
@@ -169,8 +169,8 @@ function Index(){
       var uniqueWords = eliminateDuplicateWords(replaceNonWord(sorted));
       _this.indexArray.push(uniqueWords);
     });
-
   }
+
   /**
    * @param  {String} data words to be transformed
    * transform data to lowercase , splits then sorts in ascending order
@@ -197,8 +197,8 @@ function Index(){
    */
   function createIndex(uniqueWords) {
     var indexedObject = {};
-    uniqueWords.forEach(function (docData,docIndex){
-     docData.filter(function (words){
+    uniqueWords.forEach(function (docData,docIndex) {
+     docData.filter(function (words) {
        (indexedObject[words] !== undefined)? indexedObject[words].push(docIndex)
         : indexedObject[words] = [docIndex];
      });
@@ -225,7 +225,7 @@ function Index(){
    * @return {Array} uniqueWords The full unique array
    */
   function eliminateDuplicateWords(value) {
-   var uniqueWords = value.split(' ').reduce(function (unique, word){
+   var uniqueWords = value.split(' ').reduce(function (unique, word) {
         if (!unique.includes(word)){
             unique.push(word);
           }
@@ -249,7 +249,7 @@ function Index(){
     }
     // splits words into single words and returns its position
     if((typeof key === 'string') && key.indexOf(' ') !== -1) {
-    var searchArray = key.split(' ').map(function (word){
+    var searchArray = key.split(' ').map(function (word) {
       return getIndexPosition(word, indexObject)
     });
 
@@ -263,7 +263,7 @@ function Index(){
    * @return {Boolean}
    */
   function isValidData(data) {
-    return ( ['',undefined,null,isNaN].indexOf(data) === -1)? true:false ;
+    return ( ['',undefined,null,isNaN].indexOf(data) === -1)? true:false;
   }
 
 }
