@@ -238,7 +238,7 @@ function Index(){
 
   /**
    * @param  {String} key The word to search
-   * @param  {Object} indexObject  The object containing words and documents found
+   * @param  {Object} indexObject The object containing words and documents
    * manipulates search word to return the document found
    *  @return {Array} searchArray the documents located
    */
@@ -250,7 +250,7 @@ function Index(){
     // splits words into single words and returns its position
     if((typeof key === 'string') && key.indexOf(' ') !== -1) {
     var searchArray = key.split(' ').map(function (word) {
-      return getIndexPosition(word, indexObject)
+      return getIndexPosition(word, indexObject);
     });
 
     return searchArray;
@@ -263,7 +263,7 @@ function Index(){
    * @return {Boolean}
    */
   function isValidData(data) {
-    return ( ['',undefined,null,isNaN].indexOf(data) === -1)? true:false;
+    return (['',undefined,null,isNaN].indexOf(data) === -1)? true:false;
   }
 
 }

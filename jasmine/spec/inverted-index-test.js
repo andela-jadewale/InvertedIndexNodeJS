@@ -7,7 +7,7 @@
     beforeEach( function () {
       invertedIndex = new Index();
       invertedIndex.createIndex(invertedIndex.getHostAddress() + '/jasmine/books.json');
-    }) ;
+    });
 
     describe('Read book data', function () {
       it('Checks if datasource is populated ', function (done) {
@@ -15,8 +15,8 @@
           expect(invertedIndex.emptyDatasource.isEmpty).toBe(false);
           expect(invertedIndex.jsonDocument.jsonFile).not.toBe([]);
           //asserts json file read are strings
-          invertedIndex.jsonDocument.jsonFile.forEach(function(value) {
-            value.map(function(obj){
+          invertedIndex.jsonDocument.jsonFile.forEach(function (value) {
+            value.map(function (obj) {
               expect(typeof obj.title).toEqual('string');
               expect(typeof obj.text).toEqual('string');
             });
@@ -52,7 +52,7 @@
       expect(invertedIndex.getIndex('alice')).toEqual([0]);
       expect(invertedIndex.getIndex().seek).toEqual([1]);
       expect(invertedIndex.getIndex().of).toEqual([0,1]);
-      it('Test read.json file ', function(done) {
+      it('Test read.json file ', function (done) {
         setTimeout (function () {
           // testing index mapping
           expect(invertedIndex.getIndex().and).toEqual([0,1]);
@@ -66,7 +66,7 @@
   });
 
   describe('Search Index', function () {
-    it('Search index returns object with search query', function(done) {
+    it('Search index returns object with search query', function (done) {
       setTimeout (function () {
         expect(invertedIndex.searchIndex('and')).toEqual([0,1]);
         expect(invertedIndex.searchIndex('alice')).toEqual([0]);
@@ -88,7 +88,7 @@
           .toEqual([ [ 0 ], [ 0,1 ], [ 0 ], [ 0 ] ] );
         var presentDate = new  Date();
         // test time to complete 7 search's will be less than 5 milliseconds
-        expect(presentDate.getMilliseconds() - pastDate.getMilliseconds() )
+        expect(presentDate.getMilliseconds() - pastDate.getMilliseconds())
           .toBeLessThan(5);
         done();
       }, 500);
