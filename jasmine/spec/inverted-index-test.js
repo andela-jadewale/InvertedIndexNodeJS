@@ -4,7 +4,7 @@
   var documentLength;
 
   describe('Initialises Index object', function () {
-    beforeEach( function () {
+    beforeEach(function () {
       invertedIndex = new Index();
       invertedIndex.createIndex(invertedIndex.getHostAddress() + '/jasmine/books.json');
     });
