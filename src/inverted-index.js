@@ -149,7 +149,7 @@ function Index(){
    * @return {void}
    */
   function processAsyncResponse(jsonData) {
-    if (jsonData.length >= 0 && jsonData !== []) {
+    if (jsonData.length && jsonData !== []) {
       _this.emptyDatasource.isEmpty = false;
       processAsyncData(jsonData);
       isIndexCreated();
@@ -166,7 +166,7 @@ function Index(){
    */
   function processAsyncData(jsonData) {
     jsonData.forEach(function(value) {
-      var sorted = transformAsyncData(value.title+' '+value.text);
+      var sorted = transformAsyncData(value.title + ' ' + value.text);
       var uniqueWords = eliminateDuplicateWords(replaceNonWord(sorted));
       _this.indexArray.push(uniqueWords);
     });
@@ -186,7 +186,7 @@ function Index(){
    * @return {void} [description]
    */
   function isIndexCreated() {
-    if (_this.indexArray.length > 0) {
+    if (_this.indexArray.length) {
       _this.indexCreated.isCreated = true;
     }
   }
@@ -198,7 +198,7 @@ function Index(){
    */
   function createIndex(uniqueWords) {
     var indexedObject = {};
-    uniqueWords.forEach(function (docData,docIndex) {
+    uniqueWords.forEach(function (docData, docIndex) {
      docData.filter(function (words) {
        (indexedObject[words] !== undefined)? indexedObject[words].push(docIndex)
         : indexedObject[words] = [docIndex];

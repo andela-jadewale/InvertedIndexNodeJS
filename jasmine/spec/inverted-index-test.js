@@ -6,7 +6,8 @@
   describe('Initialises Index object', function () {
     beforeEach(function () {
       invertedIndex = new Index();
-      invertedIndex.createIndex(invertedIndex.getHostAddress() + '/jasmine/books.json');
+      invertedIndex.createIndex(invertedIndex
+        .getHostAddress() + '/jasmine/books.json');
     });
 
     describe('Read book data', function () {
@@ -17,13 +18,13 @@
           //asserts json file read are strings
           invertedIndex.jsonDocument.jsonFile.forEach(function (value) {
             value.map(function (obj) {
-              expect(typeof obj.title).toEqual('string');
-              expect(typeof obj.text).toEqual('string');
+              expect(typeof obj[title]).toEqual('string');
+              expect(typeof obj[text]).toEqual('string');
             });
           });
           expect(invertedIndex.documentLength).toBeGreaterThan(0);
           expect(invertedIndex.documentLength).toEqual(2);
-          // assigns a value to documenlength which will be checked after second call to create index
+          //assigns a value to documenlength
           documentLength = invertedIndex.documentLength;
           done();
         },500);
@@ -34,7 +35,8 @@
   describe('Populate Index', function () {
     it('Index are created when json file is read', function () {
       expect(invertedIndex.indexCreated.isCreated).toBe(true);
-      invertedIndex.createIndex(invertedIndex.getHostAddress()+'/jasmine/read.json');
+      invertedIndex.createIndex(invertedIndex
+        .getHostAddress() + '/jasmine/read.json');
       it('Test book.json file is not overwritten ', function (done) {
         setTimeout (function () {
         // document length which shows create index did not overwrite previous
@@ -76,11 +78,11 @@
         expect(invertedIndex.searchIndex('alice and wonderland in'))
           .toEqual([ [ 0 ], [ 0,1 ], [ 0 ], [ 0 ] ] );
           // test complicated search works
-        expect(invertedIndex.searchIndex('Wonderland ?  . concise in '+
+        expect(invertedIndex.searchIndex('Wonderland ?  . concise in ' +
           '/ pocahontas, seek'))
           .toEqual([[ 0 ], [ 3 ], [ 0 ], [ 2 ], [ 1 ]] );
           // test an array passed into the search works
-        expect(invertedIndex.searchIndex([['alice', 'and','wonderland', 'in']]))
+        expect(invertedIndex.searchIndex([['alice', 'and', 'wonderland', 'in']]))
           .toEqual([ [ 0 ], [ 0,1 ], [ 0 ], [ 0 ] ] );
         expect(invertedIndex.searchIndex(['wonderland'])).toEqual([0]);
         expect(invertedIndex.searchIndex('wonderland')).toEqual([0]);
