@@ -1,12 +1,12 @@
 function Index(){
   'use strict';
   var _this = this;
-  this.jsonDocument = { jsonFile:[] };
+  this.jsonDocument = { jsonFile: [] };
   this.emptyDatasource = { isEmpty: true };
   this.indexCreated = { isCreated: false };
   this.documentLength = 0;
   this.indexArray = [];
-  this.indexObject = { data:[] };
+  this.indexObject = { data: [] };
 
   /**
    * gets host address
@@ -31,7 +31,7 @@ function Index(){
    * @return {Array}  an array of documents located
    */
   this.getIndex = function (key) {
-    if(key !== undefined){
+    if(key !== undefined) {
       // initiateRequest(key);
       return this.indexObject.data[key];
     }
@@ -52,6 +52,7 @@ function Index(){
   this.lowerCaseTransform = function (text) {
     return lowerCase(text);
   };
+
   /**
    * reads json file and saves words with document location in an object
    * @param  {String} filepath a path to locate json file
@@ -210,6 +211,7 @@ function Index(){
   function lowerCase(text) {
     return text.toLowerCase();
   }
+
   /**
    * @param  {String} word words
    * replaces non alphabet characters using regex e.g ?*.,+
@@ -245,7 +247,7 @@ function Index(){
   function getIndexPosition(key, indexObject) {
     // checks if it a single word and return its position
     if ((typeof key === 'string') && key.indexOf(' ') === -1) {
-      return indexObject[key.toLowerCase()];
+      return indexObject[lowerCase(key)];
     }
     // splits words into single words and returns its position
     if((typeof key === 'string') && key.indexOf(' ') !== -1) {
@@ -263,7 +265,7 @@ function Index(){
    * @return {Boolean}
    */
   function isValidData(data) {
-    return (['',undefined,null,isNaN].indexOf(data) === -1)? true:false;
+    return (['',undefined,null,isNaN].indexOf(data) === -1)? true: false;
   }
 
 }
