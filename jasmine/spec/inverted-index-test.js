@@ -1,13 +1,13 @@
 (function () {
   'use strict';
+  var Index = require('../../src/inverted-index');
   var invertedIndex;
   var documentLength;
 
   describe('Initialises Index object', function () {
     beforeEach(function () {
       invertedIndex = new Index();
-      invertedIndex.createIndex(invertedIndex
-        .getHostAddress() + '/jasmine/books.json');
+      invertedIndex.createIndex(true, require('../books'));
     });
 
     describe('Read book data', function () {
@@ -33,37 +33,32 @@
   });
 
   describe('Populate Index', function () {
-    it('Index are created when json file is read', function () {
+    it('Index are created when json file is read', function (done) {
       expect(invertedIndex.indexCreated.isCreated).toBe(true);
-      invertedIndex.createIndex(invertedIndex
-        .getHostAddress() + '/jasmine/read.json');
-      it('Test book.json file is not overwritten ', function (done) {
-        setTimeout (function () {
+      invertedIndex.createIndex(true, require('../read'));
+      setTimeout (function () {
         // document length which shows create index did not overwrite previous
-          expect(invertedIndex.documentLength).toBeGreaterThan(2);
-          done();
-        }, 500);
-      });
+        expect(invertedIndex.documentLength).toBeGreaterThan(2);
+        done();
+      }, 500);
     });
   });
 
   describe('Index Mapping', function () {
-    it('Index are mapped to correct strings', function () {
+    it('Index are mapped to correct strings', function (done) {
       expect(invertedIndex.getIndex().and).toEqual([0, 1]);
       expect(invertedIndex.getIndex().alice).toEqual([0]);
       expect(invertedIndex.getIndex('alice')).toEqual([0]);
       expect(invertedIndex.getIndex().seek).toEqual([1]);
       expect(invertedIndex.getIndex().of).toEqual([0, 1]);
-      it('Test read.json file ', function (done) {
-        setTimeout (function () {
-          // testing index mapping
-          expect(invertedIndex.getIndex().and).toEqual([0, 1]);
-          expect(invertedIndex.getIndex().concise).toEqual([3]);
-          expect(invertedIndex.getIndex().pocahontas).toEqual([2]);
-          expect(invertedIndex.getIndex().a).toEqual([0, 1, 2]);
-          done();
-        }, 500);
-      });
+      setTimeout (function () {
+        // testing index mapping
+        expect(invertedIndex.getIndex().and).toEqual([0, 1]);
+        expect(invertedIndex.getIndex().concise).toEqual([3]);
+        expect(invertedIndex.getIndex().pocahontas).toEqual([2]);
+        expect(invertedIndex.getIndex().a).toEqual([0, 1, 2]);
+        done();
+      }, 500);
     });
   });
 

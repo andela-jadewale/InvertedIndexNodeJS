@@ -1,4 +1,4 @@
-[
+module.exports = [
   {
     "title": "pocahontas",
     "text": "Think about a something wrong"

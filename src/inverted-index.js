@@ -58,8 +58,12 @@ function Index(){
    * @param  {String} filepath a path to locate json file
    * @return {Void}
    */
-  this.createIndex = function (filepath) {
+  this.createIndex = function (filepath, file) {
+    if(!file)
     isValidData(filepath)? initiateRequest(filepath) : '';
+    else {
+      callBack(true, file);
+    }
   };
 
   /**
@@ -115,11 +119,17 @@ function Index(){
    */
   function callBack(asyncRequest) {
     if (asyncRequest.readyState === 4 && asyncRequest.status === 200) {
-      var jsonData = JSON.parse(asyncRequest.responseText);
+      var jsonData = JSON.parse(asyncRequest);
       saveJsonFile(jsonData);
       saveDocumentLength(jsonData);
       processAsyncResponse(jsonData);
     }
+  }
+
+  function callBack(asyncRequest, jsonData) {
+      saveJsonFile(jsonData);
+      saveDocumentLength(jsonData);
+      processAsyncResponse(jsonData);
   }
 
   /**
@@ -269,3 +279,5 @@ function Index(){
   }
 
 }
+
+module.exports = Index

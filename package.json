@@ -1,12 +1,27 @@
 {
-    "name": "InvertedIndexNode",
-    "description":"An object of unique words mapped to specific documents",
-    "version": "1.0.0",
-    "keywords": [ "inverted-index","client", "browser","objects"],
-    "author": "Jolaade",
-    "scripts":{"start": "node main.js"},
-    "email":"jolaade.adewale@andela.com",
-    "contributors": ["jolaade"],
-    "dependencies": {"express":"latest"}
+  "name": "InvertedIndexNode",
+  "description": "An object of unique words mapped to specific documents",
+  "version": "1.0.0",
+  "keywords": [
+    "inverted-index",
+    "client",
+    "browser",
+    "objects"
+  ],
+  "author": "Jolaade",
+  "scripts": {
+    "start": "node main.js",
+    "test": "cd jasmine && jasmine"
+  },
+  "email": "jolaade.adewale@andela.com",
+  "contributors": [
+    "jolaade"
+  ],
+  "dependencies": {
+    "express": "latest"
+  },
+  "devDependencies": {
+    "jasmine": "^3.1.0",
+    "jasmine-ts-console-reporter": "^3.1.1"
+  }
 }
-
