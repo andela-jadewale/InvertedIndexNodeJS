@@ -8,5 +8,5 @@ after_success:
   - npm run coverage
 addons:
     code_climate:
-        
+        repo_token:  398c255ac3c33e25597c49ae6d9bedf3cf961bff5aa1cb9366afc98693794368
 
