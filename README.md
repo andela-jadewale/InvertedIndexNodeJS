@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/jadewale/InvertedIndexNodeJS.svg?branch=master)](https://travis-ci.org/jadewale/InvertedIndexNodeJS)
 
-[![Contact me on Codementor](https://cdn.codementor.io/badges/contact_me_github.svg)](https://www.codementor.io/jolaadeadewale765?utm_source=github&utm_medium=button&utm_term=jolaadeadewale765&utm_campaign=github)
+
 
 An inverted index consists of a list of all the unique words that appear in any document, and for each word, a list of the documents in which it appears.
 
